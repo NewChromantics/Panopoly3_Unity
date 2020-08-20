@@ -1,0 +1,8 @@
+# ignore unity temp files
+Logs/
+obj/
+Temp/
+*.csproj
+*.sln
+Library/
+.vs/
