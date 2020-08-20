@@ -51,9 +51,9 @@ public class PopPacketFileStreamParser : MonoBehaviour
 	byte[] PopNextPacket()
 	{
 		var NextPacketStartPosition = GetNextPacketStart();
-		var NextPacketEndPosition = GetNextPacketStart(NextPacketStartPosition+ PacketDelin.Length);
-		var Packet = new byte[NextPacketEndPosition - NextPacketStartPosition];
 		var SourceStart = NextPacketStartPosition + PacketDelin.Length;
+		var NextPacketEndPosition = GetNextPacketStart(SourceStart);
+		var Packet = new byte[NextPacketEndPosition - SourceStart];
 		var TargetStart = 0;
 		PendingData.CopyTo(SourceStart, Packet, TargetStart, Packet.Length);
 
@@ -80,14 +80,46 @@ public class PopPacketFileStreamParser : MonoBehaviour
 		return true;
 	}
 
+	bool IsStringData(byte[] Data)
+	{
+		if ( Data.Length == 0)
+			return false;
+
+		//	check for some chars
+		char Data0 = (char)Data[0];
+		switch(Data0)
+		{
+			case '{':
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
 	void ParsePacket(byte[] Data)
 	{
 		//	work out if its json meta or h264 packet and call event
-
+		if (IsStringData(Data) )
+		{
+			var DataString = System.Text.Encoding.UTF8.GetString(Data);
+			Debug.Log("Packet: " + DataString);
+			OnPacketString.Invoke(DataString);
+		}
+		else
+		{
+			OnPacketBinary.Invoke(Data);
+		}
 	}
 
 	void Update()
 	{
+		if ( PendingData == null )
+		{
+			Debug.LogWarning("Waiting for first data");
+			return;
+		}
+
 		while (true)
 		{
 			if (!ProcessNextData())
