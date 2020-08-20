@@ -2,8 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+namespace Pop
+{
+	[System.Serializable]
+	public class UnityEvent_Texture : UnityEngine.Events.UnityEvent<Texture> { };
+}
+
+
 public class H264Viewer : MonoBehaviour
 {
+	public Pop.UnityEvent_Texture OnLumaChanged;
 	PopH264.Decoder Decoder;
 	public PopH264.DecoderMode DecoderMode = PopH264.DecoderMode.MagicLeap_NvidiaHardware;
 	public bool ThreadedDecoding = true;
@@ -34,5 +44,6 @@ public class H264Viewer : MonoBehaviour
 		Debug.Log("New frame " + NewFrameNumber.Value);
 
 		//	update material
+		OnLumaChanged.Invoke(FramePlaneTextures[0]);
 	}
 }

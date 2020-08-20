@@ -124,8 +124,8 @@ public class PopStreamFileReader : MonoBehaviour
 			if (NewPos != Position)
 				throw new System.Exception("Seeked to " + Position + " but stream is at " + NewPos);
 			var BytesRead = File.Read(Data, 0, (int)Size);
-			if (BytesRead != Size)
-				throw new System.Exception("FileStream only read " + BytesRead + "/" + Size + " bytes");
+			//if (BytesRead != Size)
+			//	throw new System.Exception("FileStream only read " + BytesRead + "/" + Size + " bytes");
 			return Data;
 		};
 #else
