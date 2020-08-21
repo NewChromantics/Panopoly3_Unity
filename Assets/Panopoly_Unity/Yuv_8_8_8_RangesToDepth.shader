@@ -8,7 +8,7 @@
 
 		[Header(Encoding Params from PopCap)]Encoded_DepthMinMetres("Encoded_DepthMinMetres",Range(0,30)) = 0
 		Encoded_DepthMaxMetres("Encoded_DepthMaxMetres",Range(0,30)) = 5
-		[IntRange]Encoded_DepthRanges("Encoded_DepthRanges",Range(1,128)) = 1
+		[IntRange]Encoded_ChromaRangeCount("Encoded_ChromaRangeCount",Range(1,128)) = 1
 		[Toggle]Encoded_LumaPingPong("Encoded_LumaPingPong",Range(0,1)) = 1
 	}
 	
@@ -42,7 +42,7 @@
 				float4 LumaPlane_ST;
 				sampler2D ChromaUPlane;
 				sampler2D ChromaVPlane;
-				int Encoded_DepthRanges;
+				int Encoded_ChromaRangeCount;
 				float Encoded_DepthMinMetres;
 				float Encoded_DepthMaxMetres;
 				bool Encoded_LumaPingPong;
@@ -79,7 +79,7 @@
 				fixed4 frag(v2f i) : SV_Target
 				{
 					PopYuvEncodingParams Params;
-					Params.DepthRanges = Encoded_DepthRanges;
+					Params.ChromaRangeCount = Encoded_ChromaRangeCount;
 					Params.DepthMinMetres = Encoded_DepthMinMetres;
 					Params.DepthMaxMetres = Encoded_DepthMaxMetres;
 					Params.PingPongLuma = Encoded_LumaPingPong;

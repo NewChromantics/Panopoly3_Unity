@@ -19,6 +19,7 @@ public class PopPacketFileStreamParser : MonoBehaviour
 	public Pop.UnityEvent_PacketString OnPacketString;
 
 	List<byte> PendingData;
+	bool PendingDataHasNoMarker = false;	//	set this to true whenever a search fails. Reset it when new data arrives (could store offset to where we last checked)
 
 	//	gr: queue up data, don't process now, so we can throttle, or allow multithread access
 	public void OnFileChunk(byte[] Data)
@@ -26,6 +27,8 @@ public class PopPacketFileStreamParser : MonoBehaviour
 		if (PendingData == null)
 			PendingData = new List<byte>();
 		PendingData.AddRange(Data);
+		//	reset marker knowledge
+		PendingDataHasNoMarker = false;
 	}
 
 	readonly byte[] PacketDelin = new byte[] { (byte)'P', (byte)'o', (byte)'p', (byte)'\n' };
@@ -50,6 +53,10 @@ public class PopPacketFileStreamParser : MonoBehaviour
 
 	byte[] PopNextPacket()
 	{
+		//	we know there is no packet, skip search
+		if (PendingDataHasNoMarker)
+			return null;
+
 		var NextPacketStartPosition = GetNextPacketStart();
 		var SourceStart = NextPacketStartPosition + PacketDelin.Length;
 		var NextPacketEndPosition = GetNextPacketStart(SourceStart);
@@ -65,9 +72,19 @@ public class PopPacketFileStreamParser : MonoBehaviour
 	//	return if more data to process
 	bool ProcessNextData()
 	{
-		var Packet = PopNextPacket();
-		if (Packet == null)
+		byte[] Packet;
+		try
+		{
+			Packet = PopNextPacket();
+			if (Packet == null)
+				return false;
+		}
+		catch (System.Exception e)
+		{
+			//	assuming "No marker found"
+			PendingDataHasNoMarker = true;
 			return false;
+		}
 
 		try
 		{
