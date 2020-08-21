@@ -227,6 +227,7 @@ GameObject:
   - component: {fileID: 775903227}
   - component: {fileID: 775903230}
   - component: {fileID: 775903231}
+  - component: {fileID: 775903232}
   m_Layer: 0
   m_Name: Luma Cube
   m_TagString: Untagged
@@ -371,6 +372,19 @@ MonoBehaviour:
   InitialValue_Float: 0
   InitialValue_Int: 0
   InitialValue_Colour: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &775903232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 775903225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342ab83ec8e88cc4f9c7d20cc6bfe518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  YuvToDepthMaterial: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,7 +498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4fb9b306cd3d5b45a93e7813e95371d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Filename: KinectAzure_000396300112_1597851154348.h264.PopCap
+  Filename: KinectAzure_000396300112_1598030995578.h264.PopCap
   OnFileChunkRead:
     m_PersistentCalls:
       m_Calls:
@@ -529,7 +543,18 @@ MonoBehaviour:
         m_CallState: 2
   OnPacketString:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 775903232}
+        m_MethodName: OnMeta
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1450286359
 Transform:
   m_ObjectHideFlags: 0
@@ -598,7 +623,18 @@ MonoBehaviour:
         m_CallState: 2
   OnMessageText:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 775903232}
+        m_MethodName: OnMeta
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   MaxJobsPerFrame: 1000
   DefaultPort: 8080
   VerboseDebug: 0

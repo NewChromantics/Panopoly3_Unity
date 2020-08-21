@@ -32,8 +32,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Encoded_ChromaRangeCount: 36
     - Encoded_DepthMaxMetres: 5
     - Encoded_DepthMinMetres: 0
     - Encoded_DepthRanges: 1
-    - Encoded_LumaPingPong: 1
+    - Encoded_LumaPingPong: 0
     m_Colors: []
