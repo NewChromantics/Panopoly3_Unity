@@ -63,7 +63,6 @@ public class PopCapMetaParser : MonoBehaviour
 		public FrameMetaMeta Meta;
 	};
 
-	public Material YuvToDepthMaterial;
 
 	public void OnMeta(string MetaJson)
 	{
