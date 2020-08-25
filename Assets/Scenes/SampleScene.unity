@@ -224,12 +224,10 @@ GameObject:
   - component: {fileID: 775903226}
   - component: {fileID: 775903229}
   - component: {fileID: 775903228}
-  - component: {fileID: 775903227}
-  - component: {fileID: 775903230}
-  - component: {fileID: 775903231}
   - component: {fileID: 775903232}
+  - component: {fileID: 775903227}
   m_Layer: 0
-  m_Name: Luma Cube
+  m_Name: Decoder and Depth Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,21 +245,26 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &775903227
-BoxCollider:
+--- !u!114 &775903227
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 775903225}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2b7a287632cd5048b5a851ed718f45b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DecoderMode: 1
+  ThreadedDecoding: 1
+  TextureUniformNames:
+  - LumaPlane
+  - Plane2
+  - Plane3
 --- !u!23 &775903228
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -309,69 +312,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 775903225}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &775903230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 775903225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2b7a287632cd5048b5a851ed718f45b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnLumaChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnTexturePlanesChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnTexturePlaneAndNamessChanged:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 775903231}
-        m_MethodName: SetTextures
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  DecoderMode: 0
-  ThreadedDecoding: 1
-  TextureUniformNames:
-  - LumaPlane
-  - ChromaUPlane
-  - ChromaVPlane
---- !u!114 &775903231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 775903225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d780008e473134e43b81a79c02b292e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DebugLogSetValue: 0
-  MaterialOwnerIsParent: 0
-  MaterialOwnerInChildren: 0
-  materialOwner: {fileID: 775903228}
-  _material: {fileID: 0}
-  UseSharedMaterial: 1
-  GlobalUniform: 0
-  Uniform: 
-  Uniform2: 
-  InitialiseValue: 0
-  InitialValue_Float: 0
-  InitialValue_Int: 0
-  InitialValue_Colour: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &775903232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,7 +324,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342ab83ec8e88cc4f9c7d20cc6bfe518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  YuvToDepthMaterial: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,7 +424,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1450286357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -529,7 +468,7 @@ MonoBehaviour:
   OnPacketBinary:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 775903230}
+      - m_Target: {fileID: 775903227}
         m_MethodName: DecodeH264Data
         m_Mode: 0
         m_Arguments:
@@ -543,7 +482,7 @@ MonoBehaviour:
   OnPacketString:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 775903232}
+      - m_Target: {fileID: 775903227}
         m_MethodName: OnMeta
         m_Mode: 0
         m_Arguments:
@@ -609,7 +548,7 @@ MonoBehaviour:
   OnMessageBinary:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 775903230}
+      - m_Target: {fileID: 775903227}
         m_MethodName: DecodeH264Data
         m_Mode: 0
         m_Arguments:
@@ -623,7 +562,7 @@ MonoBehaviour:
   OnMessageText:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 775903232}
+      - m_Target: {fileID: 775903227}
         m_MethodName: OnMeta
         m_Mode: 0
         m_Arguments:
@@ -635,11 +574,12 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   MaxJobsPerFrame: 1000
-  DefaultPort: 8080
+  DefaultPort: 8081
   VerboseDebug: 0
   Hosts:
+  - fireball.local
   - jetson.local
-  RetryTimeSecs: 5
+  RetryTimeSecs: 1
 --- !u!4 &2022895216
 Transform:
   m_ObjectHideFlags: 0
@@ -652,5 +592,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
