@@ -14,7 +14,6 @@ namespace Pop
 
 public class PopPacketFileStreamParser : MonoBehaviour
 {
-	public string Filename;
 	public Pop.UnityEvent_PacketBinary OnPacketBinary;
 	public Pop.UnityEvent_PacketString OnPacketString;
 
