@@ -13,13 +13,28 @@ public class H264Viewer : MonoBehaviour
 	List<Texture2D> FramePlaneTextures;
 	List<Pop.PixelFormat> FramePlaneFormats;
 	public List<string> TextureUniformNames;
+	public string StreamFilter;
 
 	PopCapFrameMeta LastMeta;
+	PopCapFrameMeta LastStreamMeta;
+
 
 	//	todo: keep meta associated with frame number here
 	PopCapFrameMeta GetMeta(int FrameNumber)
 	{
-		return LastMeta;
+		return LastStreamMeta;
+	}
+
+	bool IsLastMetaForThisStream()
+	{
+		if (string.IsNullOrEmpty(StreamFilter))
+			return true;
+		if (LastMeta == null)
+			return true;
+		if (LastMeta.Stream != StreamFilter)
+			return false;
+
+		return true;
 	}
 
 	public void OnMeta(string MetaJson)
@@ -29,13 +44,22 @@ public class H264Viewer : MonoBehaviour
 		//	in decode;
 		//	this.FrameMeta[FrameCounter] = LastMeta
 		var NewMeta = JsonUtility.FromJson<PopCapFrameMeta>(MetaJson);
+		LastMeta = NewMeta;
 
-		if (NewMeta != null)
-			LastMeta = NewMeta;
+		//	apply filter
+		if (IsLastMetaForThisStream())
+			LastStreamMeta = LastMeta;
 	}
 
 	public void DecodeH264Data(byte[] Data)
 	{
+		//	skip data which is destined for another stream
+		if (!IsLastMetaForThisStream())
+		{
+			Debug.Log("skipping frame; is for stream " + this.LastMeta.Stream);
+			return;
+		}
+
 		if (Decoder == null)
 			Decoder = new PopH264.Decoder(DecoderMode, ThreadedDecoding);
 
