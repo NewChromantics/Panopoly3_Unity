@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PopCapMetaParser : MonoBehaviour
+namespace PopCap
 {
 	[System.Serializable]
 	public class H264EncoderParams_Meta
@@ -80,27 +80,4 @@ public class PopCapMetaParser : MonoBehaviour
 		public int LumaSize;
 	};
 
-	public Material YuvToDepthMaterial;
-
-	public void OnMeta(string MetaJson)
-	{
-		var Meta = JsonUtility.FromJson<PopCapFrameMeta>(MetaJson);
-
-		//	gr this needs to sync with whatever renders the texture
-		UpdateMaterial(Meta.YuvEncodeParams);
-	}
-
-	void UpdateMaterial(YuvEncoderParams_Meta EncoderParams)
-	{
-		var SetMat = GetComponent<PopSetMaterialValue>();
-		SetMat.ForEachMaterial(m => UpdateMaterial(m, EncoderParams));
-	}
-
-	void UpdateMaterial(Material material,YuvEncoderParams_Meta EncoderParams)
-	{
-		material.SetFloat("Encoded_DepthMinMetres", EncoderParams.DepthMinMm / 1000);
-		material.SetFloat("Encoded_DepthMaxMetres", EncoderParams.DepthMaxMm / 1000);
-		material.SetInt("Encoded_ChromaRangeCount", EncoderParams.ChromaRangeCount);
-		material.SetInt("Encoded_LumaPingPong", EncoderParams.PingPongLuma ? 1:0);
-	}
 }

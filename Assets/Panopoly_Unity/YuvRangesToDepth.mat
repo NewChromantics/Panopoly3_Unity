@@ -45,5 +45,5 @@ Material:
     - Encoded_DepthMinMetres: 0
     - Encoded_DepthRanges: 1
     - Encoded_LumaPingPong: 0
-    - PlaneCount: 2
+    - PlaneCount: 3
     m_Colors: []
