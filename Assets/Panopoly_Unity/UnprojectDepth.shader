@@ -55,6 +55,7 @@ Shader "Panopoly/UnprojectDepth"
 			float p1;
 			float p2;
 
+			//	gr: this code is expecting uv in pixels, need the original pixel size (or at least, make cxy and fxy relative)
 			//	from https://github.com/microsoft/Azure-Kinect-Sensor-SDK/blob/39319dcc1e64507b459bbb2594bfc54dfa50c0cc/src/transformation/intrinsic_transformation.c#L330
 			float2 Unproject_Internal(float2 uv, float Depth)
 			{
