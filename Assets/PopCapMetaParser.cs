@@ -4,6 +4,24 @@ using UnityEngine;
 
 public class PopCapMetaParser : MonoBehaviour
 {
+	[System.Serializable]
+	public class H264EncoderParams_Meta
+	{
+		public int AverageKbps;
+		public int BSlicedThreads;
+		public bool CpuOptimisations;
+		public bool Deterministic;
+		public int EncoderThreads;
+		public int LookaheadThreads;
+		public int MaxFrameBuffers;
+		public int MaxKbps;
+		public int MaxSliceBytes;
+		public bool MaximisePowerEfficiency;
+		public int ProfileLevel;
+		public float Quality;
+		public bool Realtime;
+		public bool VerboseDebug;
+	};
 
 	[System.Serializable]
 	public class YuvEncoderParams_Meta
@@ -14,13 +32,7 @@ public class PopCapMetaParser : MonoBehaviour
 		public bool PingPongLuma;
 	};
 	
-
-	[System.Serializable]
-	public class FrameMetaMeta
-	{
-		
-	};
-
+	
 	[System.Serializable]
 	public class PopCapFrameMeta
 	{
