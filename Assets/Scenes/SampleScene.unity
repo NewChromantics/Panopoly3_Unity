@@ -264,7 +264,7 @@ MonoBehaviour:
   - LumaPlane
   - Plane2
   - Plane3
-  StreamFilter: Depth16mm
+  StreamFilter: Depth
 --- !u!23 &775903228
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -511,7 +511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1450286357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -683,7 +683,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   MaxJobsPerFrame: 1000
-  DefaultPort: 8081
+  DefaultPort: 8080
   VerboseDebug: 0
   Hosts:
   - fireball.local

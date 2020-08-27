@@ -31,7 +31,7 @@ public class H264Viewer : MonoBehaviour
 			return true;
 		if (LastMeta == null)
 			return true;
-		if (LastMeta.Stream != StreamFilter)
+		if (!LastMeta.Stream.Contains(StreamFilter))
 			return false;
 
 		return true;
