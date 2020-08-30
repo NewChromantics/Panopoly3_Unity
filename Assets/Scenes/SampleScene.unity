@@ -264,7 +264,7 @@ MonoBehaviour:
   - LumaPlane
   - Plane2
   - Plane3
-  StreamFilter: Depth
+  StreamFilter: DepthFloat
 --- !u!23 &775903228
 MeshRenderer:
   m_ObjectHideFlags: 0
