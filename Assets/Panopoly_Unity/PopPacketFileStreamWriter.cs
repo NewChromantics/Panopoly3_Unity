@@ -19,7 +19,7 @@ public class PopPacketFileStreamWriter : MonoBehaviour
 
 		if ( File == null )
 		{
-			File = new System.IO.FileStream(Filename, Append ? System.IO.FileMode.Append : System.IO.FileMode.CreateNew );
+			File = new System.IO.FileStream(Filename, Append ? System.IO.FileMode.Append : System.IO.FileMode.OpenOrCreate );
 		}
 		File.Write(Data, 0, Data.Length);
 	}
