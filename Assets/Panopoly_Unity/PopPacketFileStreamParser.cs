@@ -30,7 +30,7 @@ public class PopPacketFileStreamParser : MonoBehaviour
 		PendingDataHasNoMarker = false;
 	}
 
-	readonly byte[] PacketDelin = new byte[] { (byte)'P', (byte)'o', (byte)'p', (byte)'\n' };
+	public readonly static byte[] PacketDelin = new byte[] { (byte)'P', (byte)'o', (byte)'p', (byte)'\n' };
 	
 	int GetNextPacketStart(int FromPosition=0)
 	{
