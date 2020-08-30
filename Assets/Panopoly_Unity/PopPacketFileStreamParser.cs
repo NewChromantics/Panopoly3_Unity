@@ -124,6 +124,7 @@ public class PopPacketFileStreamParser : MonoBehaviour
 		}
 		else
 		{
+			Debug.Log("Packet bytes: x" + Data.Length);
 			OnPacketBinary.Invoke(Data);
 		}
 	}
