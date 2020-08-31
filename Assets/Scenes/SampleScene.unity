@@ -429,7 +429,7 @@ MonoBehaviour:
   DecoderMode: 0
   ThreadedDecoding: 1
   TextureUniformNames:
-  - _MainTex
+  - LumaPlane
   - Plane2
   - Plane3
   StreamFilter: Greyscale
@@ -451,7 +451,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b4226c1279b76fd46b63a0995e65db10, type: 2}
+  - {fileID: 2100000, guid: fbf6afad7d00841ef825ab922e83f06a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -539,7 +539,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  ReadMbSec: 5
+  ReadMbSec: 10
 --- !u!114 &1450286358
 MonoBehaviour:
   m_ObjectHideFlags: 0
