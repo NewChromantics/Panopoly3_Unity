@@ -11,6 +11,15 @@ public class PopPacketFileStreamWriter : MonoBehaviour
 
 	System.IO.FileStream File;
 
+	void OnDisable()
+	{
+		if (File != null)
+		{
+			File.Close();
+			File = null;
+		}
+	}
+
 	void Write(byte[] Data)
 	{
 		//	needed as these funcs can be called whilst disabled
