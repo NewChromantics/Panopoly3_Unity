@@ -38,6 +38,7 @@ namespace PopCap
 	{
 		public int QueuedH264Packets;   //	at the time, number of h264 packets that were queued
 		public string CameraName;
+		public string Stream;
 		public int DataSize;        //	this is the h264 packet size
 		public int OutputTimeMs;        //	time the packet was sent to network/file
 		public H264EncoderParams_Meta EncoderParams;
