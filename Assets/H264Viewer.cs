@@ -14,6 +14,9 @@ public class H264Viewer : MonoBehaviour
 	List<Pop.PixelFormat> FramePlaneFormats;
 	public List<string> TextureUniformNames;
 
+	[SerializeField] private bool debugLogging;
+	
+	
 	PopCapFrameMeta LastMeta;
 
 	//	todo: keep meta associated with frame number here
@@ -40,7 +43,8 @@ public class H264Viewer : MonoBehaviour
 			Decoder = new PopH264.Decoder(DecoderMode, ThreadedDecoding);
 
 		Decoder.PushFrameData(Data, FrameCounter++);
-		Debug.Log("Pushed frame " + FrameCounter);
+		if(debugLogging)
+			Debug.Log("Pushed frame " + FrameCounter);
 	}
 
 	void Update()
@@ -55,7 +59,8 @@ public class H264Viewer : MonoBehaviour
 		if (!NewFrameNumber.HasValue)
 			return;
 
-		Debug.Log("New frame " + NewFrameNumber.Value);
+		if(debugLogging)
+			Debug.Log("New frame " + NewFrameNumber.Value);
 
 		var Meta = GetMeta(NewFrameNumber.Value);
 
