@@ -85,8 +85,12 @@ uint16_t YuvToDepth(uint8_t Luma, uint8_t ChromaU, uint8_t ChromaV, EncodeParams
 
 //	convert YUV sampled values into local/camera depth
 //	multiply this, plus camera uv (so u,v,z,1) with a projection matrix to get world space position
-float GetLocalDepth(float Luma, float ChromaU, float ChromaV, PopYuvEncodingParams EncodingParams)
+bool Valid = true;
+float GetLocalDepth(float Luma, float ChromaU, float ChromaV, PopYuvEncodingParams EncodingParams,out bool Valid)
 {
+	//	todo: do noise reduction here (see web)
+	Valid = true;
+
 	EncodeParams_t Params;
 	Params.DepthMin = EncodingParams.DepthMinMetres * 1000;
 	Params.DepthMax = EncodingParams.DepthMaxMetres * 1000;

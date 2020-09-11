@@ -15,6 +15,7 @@
 		Encoded_DepthMaxMetres("Encoded_DepthMaxMetres",Range(0,30)) = 5
 		[IntRange]Encoded_ChromaRangeCount("Encoded_ChromaRangeCount",Range(1,128)) = 1
 		[Toggle]Encoded_LumaPingPong("Encoded_LumaPingPong",Range(0,1)) = 1
+		[Toggle]Debug_Depth("Debug_Depth",Range(0,1)) = 0
 	}
 	
 		SubShader
@@ -59,6 +60,9 @@
 				float Encoded_DepthMinMetres;
 				float Encoded_DepthMaxMetres;
 				bool Encoded_LumaPingPong;
+				
+				float Debug_Depth;
+				#define DEBUG_DEPTH	(Debug_Depth>0.5)
 
 				v2f vert(appdata v)
 				{
@@ -129,11 +133,32 @@
 
 					float Luma = GetLuma(i.uv);
 					float2 ChromaUV = GetChromaUv(i.uv);
-
-					float Depth = GetLocalDepth(Luma, ChromaUV.x, ChromaUV.y, Params);
-					float3 Rgb = NormalToRedGreen(Depth);
 					
-					return float4(Rgb, 1.0);
+					float LocalDepth = GetLocalDepth(Luma, ChromaUV.x, ChromaUV.y, Params, Valid );
+					
+					//	degenerate/flag
+					if ( !Valid )
+					{
+						return float4(0,0,0,0);
+					}
+					
+					//	this output should be in camera-local space
+					//	need a proper inverse projection matrix here to go from pixel/uv to projected out from camera
+					float x = mix(-1,1,i.uv.x); 
+					float y = mix(-1,1,i.uv.y); 
+					float z = LocalDepth;
+					
+					//	should we convert to world-pos here (with camera localtoworld) web version currently does not
+					//	because webgl cant always do float textures so is quantized 8bit
+					//	in native, we could
+
+					if ( DEBUG_DEPTH )
+					{
+						float3 Rgb = NormalToRedGreen(LocalDepth);
+						return return float4(Rgb, 1.0);
+					}
+					
+					return float4(x,y,z, 1.0);
 				}
 				ENDCG
 			}
