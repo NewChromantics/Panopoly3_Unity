@@ -16,7 +16,7 @@ public class PopPacketFileStreamParser : MonoBehaviour
 {
 	public Pop.UnityEvent_PacketBinary OnPacketBinary;
 	public Pop.UnityEvent_PacketString OnPacketString;
-
+	public bool VerboseDebug = false;
 	List<byte> PendingData;
 	bool PendingDataHasNoMarker = false;	//	set this to true whenever a search fails. Reset it when new data arrives (could store offset to where we last checked)
 
@@ -119,12 +119,14 @@ public class PopPacketFileStreamParser : MonoBehaviour
 		if (IsStringData(Data) )
 		{
 			var DataString = System.Text.Encoding.UTF8.GetString(Data);
-			Debug.Log("Packet: " + DataString);
+			if (VerboseDebug)
+				Debug.Log("Packet: " + DataString);
 			OnPacketString.Invoke(DataString);
 		}
 		else
 		{
-			Debug.Log("Packet bytes: x" + Data.Length);
+			if (VerboseDebug)
+				Debug.Log("Packet bytes: x" + Data.Length);
 			OnPacketBinary.Invoke(Data);
 		}
 	}

@@ -9,6 +9,8 @@ public class UnityEvent_TextureAndTime : UnityEngine.Events.UnityEvent<Texture,i
 
 public class H264Viewer : MonoBehaviour
 {
+	public bool VerboseDebug = false;
+
 	PopH264.Decoder Decoder;
 	public PopH264.DecoderMode DecoderMode = PopH264.DecoderMode.MagicLeap_NvidiaHardware;
 	public bool ThreadedDecoding = true;
@@ -22,8 +24,11 @@ public class H264Viewer : MonoBehaviour
 	public RenderTexture BlitTarget;
 	public Material BlitMaterial;
 	public UnityEvent_TextureAndTime OnBlit;
+	[Header("To aid debugging material/shader")]
+	public bool BlitEveryFrame = false;
 
-	[SerializeField] private bool VerboseDebug = false;
+	//	needed for blitevery frame
+	int? LastFrameNumber = null;
 	
 	
 	PopCapFrameMeta LastMeta;
@@ -67,7 +72,8 @@ public class H264Viewer : MonoBehaviour
 		//	skip data which is destined for another stream
 		if (!IsLastMetaForThisStream())
 		{
-			Debug.Log("skipping frame; is for stream " + this.LastMeta.Stream);
+			if ( VerboseDebug )
+				Debug.Log("skipping frame; is for stream " + this.LastMeta.Stream);
 			return;
 		}
 
@@ -83,7 +89,14 @@ public class H264Viewer : MonoBehaviour
 	{
 		if (Decoder != null)
 			UpdateFrame();
+
+		if ( BlitEveryFrame && LastFrameNumber.HasValue )
+		{
+			var Meta = GetMeta(LastFrameNumber.Value);
+			UpdateBlit(LastFrameNumber.Value, Meta.YuvEncodeParams, FramePlaneTextures, TextureUniformNames);
+		}
 	}
+
 
 	void UpdateFrame()
 	{
@@ -91,7 +104,9 @@ public class H264Viewer : MonoBehaviour
 		if (!NewFrameNumber.HasValue)
 			return;
 
-		if(VerboseDebug)
+		LastFrameNumber = NewFrameNumber;
+
+		if (VerboseDebug)
 			Debug.Log("New frame " + NewFrameNumber.Value);
 
 		var Meta = GetMeta(NewFrameNumber.Value);

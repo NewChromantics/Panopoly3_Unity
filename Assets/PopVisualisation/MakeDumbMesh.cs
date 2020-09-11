@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class MakeDumbMesh : MonoBehaviour
 {
 	public Mesh mesh;
@@ -13,6 +14,7 @@ public class MakeDumbMesh : MonoBehaviour
 
 	void GenerateMesh()
 	{
+		//	modify existing asset where possible
 		mesh = MakeMesh(PointCount, mesh);
 		//	try and make the user save it as a file
 #if UNITY_EDITOR
@@ -25,10 +27,21 @@ public class MakeDumbMesh : MonoBehaviour
 		}
 	}
 
+	void Update()
+	{
+		//	auto regen mesh
+		if (mesh != null)
+		{
+			if (VertexCount != mesh.vertexCount)
+				GenerateMesh();
+		}
+	}
+
 	void OnEnable()
 	{
-		Debug.Log("OnEnable");
-		//if ( mesh == null )
+		Update();
+
+		if (mesh == null)
 			GenerateMesh();
 	}
 
