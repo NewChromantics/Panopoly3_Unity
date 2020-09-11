@@ -22,7 +22,8 @@
             #pragma vertex vert
             #pragma fragment frag
 
-            #include "UnityCG.cginc"
+			#include "UnityCG.cginc"
+			#include "PointCloudShader.cginc"
 
             struct appdata
             {
@@ -36,7 +37,10 @@
 				float4 OverrideColour : TEXCOORD1;
             };
 
-			sampler2D CloudPositions;
+			//sampler2D CloudPositions;
+			Texture2D<float4> CloudPositions;
+			SamplerState sampler_CloudPositions;
+
 			sampler2D CloudColours;
 			float4 CloudPositions_texelSize;
 			float4 CloudColours_texelSize;
@@ -50,38 +54,24 @@
 
 			//float4x4 CameraToWorld;
 
-			float3 GetTrianglePosition(float TriangleIndex,out float2 ColourUv,out bool Valid)
-			{
-				float MapWidth = 640;// CloudPositions_texelSize.z;
-				float u = fmod(TriangleIndex, MapWidth) / MapWidth;
-				float v = floor(TriangleIndex / MapWidth) / MapWidth;
-
-				ColourUv = float2(u, 1.0-v);
-				float4 PositionUv = float4(u, v,0,0);
-				float4 PositionSample = tex2Dlod(CloudPositions, PositionUv);
-				Valid = PositionSample.w > 0.5;
-				return PositionSample.xyz;
-			}
 
             v2f vert (appdata v)
             {
 				float TriangleIndex = v.uv_TriangleIndex.z;
 				
 				//	position in camera space
+				float3 CameraPosition;
 				float2 ColourUv;
 				bool Valid = true;
-				float3 CameraPosition = GetTrianglePosition(TriangleIndex, ColourUv, Valid);
-
-				//	local space offset of the triangle
-				float3 VertexPosition = float3(v.uv_TriangleIndex.xy, 0) * PointSize;
-				CameraPosition += VertexPosition;
+				Vertex_uv_TriangleIndex_To_CloudUvs(CloudPositions, sampler_CloudPositions, v.uv_TriangleIndex, PointSize, CameraPosition, ColourUv);
+				//float3 CameraPosition = GetTrianglePosition(TriangleIndex, ColourUv, Valid);
 
 				//	gr: here, do billboarding, and repalce below with UnityWorldToClipPos
 				v2f o;
 				o.vertex = UnityObjectToClipPos(CameraPosition);
                 o.uv = ColourUv;
 				o.OverrideColour = float4(0, 0, 0, 0);
-
+				/*
 				if (!Valid && DEBUG_INVALIDPOSITIONS)
 				{
 					o.OverrideColour = float4(0, 1, 0, 1);
@@ -90,6 +80,7 @@
 				{
 					o.vertex = float4(0, 0, 0, 0);
 				}
+				*/
                 return o;
             }
 
