@@ -59,6 +59,12 @@ Shader "Panopoly/UnprojectDepth"
 			//	from https://github.com/microsoft/Azure-Kinect-Sensor-SDK/blob/39319dcc1e64507b459bbb2594bfc54dfa50c0cc/src/transformation/intrinsic_transformation.c#L330
 			float2 Unproject_Internal(float2 uv, float Depth)
 			{
+				//	gr: projectionm matrix should be something like
+				//	fx	0	cx	0
+				//	0	fy	cy	0
+				//	0	0	near	0
+				//	0	0	far	0
+
 				// correction for radial distortion
 				float xp_d = (uv[0] - cx) / fx - codx;
 				float yp_d = (uv[1] - cy) / fy - cody;
