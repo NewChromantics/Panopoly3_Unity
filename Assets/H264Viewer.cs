@@ -4,6 +4,9 @@ using UnityEngine;
 using PopCap;
 
 
+[System.Serializable]
+public class UnityEvent_TextureAndTime : UnityEngine.Events.UnityEvent<Texture,int> { }
+
 public class H264Viewer : MonoBehaviour
 {
 	PopH264.Decoder Decoder;
@@ -15,7 +18,12 @@ public class H264Viewer : MonoBehaviour
 	public List<string> TextureUniformNames;
 	public string StreamFilter;
 
-	[SerializeField] private bool debugLogging;
+	[Header("Should we auto create this if blit event/material is set?")]
+	public RenderTexture BlitTarget;
+	public Material BlitMaterial;
+	public UnityEvent_TextureAndTime OnBlit;
+
+	[SerializeField] private bool VerboseDebug = false;
 	
 	
 	PopCapFrameMeta LastMeta;
@@ -67,7 +75,7 @@ public class H264Viewer : MonoBehaviour
 			Decoder = new PopH264.Decoder(DecoderMode, ThreadedDecoding);
 
 		Decoder.PushFrameData(Data, FrameCounter++);
-		if(debugLogging)
+		if(VerboseDebug)
 			Debug.Log("Pushed frame " + FrameCounter);
 	}
 
@@ -83,19 +91,33 @@ public class H264Viewer : MonoBehaviour
 		if (!NewFrameNumber.HasValue)
 			return;
 
-		if(debugLogging)
+		if(VerboseDebug)
 			Debug.Log("New frame " + NewFrameNumber.Value);
 
 		var Meta = GetMeta(NewFrameNumber.Value);
 
 		//	gr this needs to sync with frame output
-		UpdateMaterial(Meta.YuvEncodeParams, FramePlaneTextures, TextureUniformNames);
+		//	maybe this component should just blit, then send complete texture with timecode to something else
+		var mr = GetComponent<MeshRenderer>();
+		if ( mr != null )
+			UpdateMaterial( mr.sharedMaterial, Meta.YuvEncodeParams, FramePlaneTextures, TextureUniformNames);
+		UpdateBlit(NewFrameNumber.Value,Meta.YuvEncodeParams, FramePlaneTextures, TextureUniformNames);
 	}
 
-	void UpdateMaterial(YuvEncoderParams_Meta EncoderParams, List<Texture2D> Planes, List<string> PlaneUniforms)
+	void UpdateBlit(int FrameTime,YuvEncoderParams_Meta EncoderParams, List<Texture2D> Planes, List<string> PlaneUniforms)
 	{
-		var material = GetComponent<MeshRenderer>().sharedMaterial;
-	
+		if (BlitTarget == null || BlitMaterial == null)
+			return;
+
+		UpdateMaterial(BlitMaterial, EncoderParams, Planes, PlaneUniforms);
+		//	not best appraoch any more! should be deffered
+		Graphics.Blit(null, BlitTarget, BlitMaterial);
+		OnBlit.Invoke(BlitTarget, FrameTime);
+	}
+
+
+	void UpdateMaterial(Material material,YuvEncoderParams_Meta EncoderParams, List<Texture2D> Planes, List<string> PlaneUniforms)
+	{
 		material.SetFloat("Encoded_DepthMinMetres", EncoderParams.DepthMinMm / 1000);
 		material.SetFloat("Encoded_DepthMaxMetres", EncoderParams.DepthMaxMm / 1000);
 		material.SetInt("Encoded_ChromaRangeCount", EncoderParams.ChromaRangeCount);

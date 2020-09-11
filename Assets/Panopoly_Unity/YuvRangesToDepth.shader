@@ -133,7 +133,7 @@
 
 					float Luma = GetLuma(i.uv);
 					float2 ChromaUV = GetChromaUv(i.uv);
-					
+					bool Valid = true;
 					float LocalDepth = GetLocalDepth(Luma, ChromaUV.x, ChromaUV.y, Params, Valid );
 					
 					//	degenerate/flag
@@ -144,8 +144,8 @@
 					
 					//	this output should be in camera-local space
 					//	need a proper inverse projection matrix here to go from pixel/uv to projected out from camera
-					float x = mix(-1,1,i.uv.x); 
-					float y = mix(-1,1,i.uv.y); 
+					float x = lerp(-1,1,i.uv.x); 
+					float y = lerp(-1,1,i.uv.y);
 					float z = LocalDepth;
 					
 					//	should we convert to world-pos here (with camera localtoworld) web version currently does not
@@ -155,7 +155,7 @@
 					if ( DEBUG_DEPTH )
 					{
 						float3 Rgb = NormalToRedGreen(LocalDepth);
-						return return float4(Rgb, 1.0);
+						return float4(Rgb, 1.0);
 					}
 					
 					return float4(x,y,z, 1.0);

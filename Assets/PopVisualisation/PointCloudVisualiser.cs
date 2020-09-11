@@ -128,7 +128,9 @@ public class PointCloudVisualiser : MonoBehaviour
     }
 
     private void UpdatePointCloud()
-    { 
+    {
+		if (!this.isActiveAndEnabled)
+			return;
         Graphics.Blit(null, _depthRenderTexture, depthMaterial);
         RenderTexture.active = _depthRenderTexture;
         _texture2D.ReadPixels(new Rect(0, 0, _width, _height), 0, 0, false);
