@@ -61,9 +61,10 @@ void Vertex_uv_TriangleIndex_To_CloudUvs(Texture2D<float4> Positions,SamplerStat
 //		Vertex_uv_TriangleIndex_To_CloudUvs
 //	because of missing reference to 
 //		Vertex_uv_TriangleIndex_To_CloudUvs_float
-void Vertex_uv_TriangleIndex_To_CloudUvs_float(Texture2D<float4> Positions, SamplerState PositionsSampler, float3 uv_TriangleIndex, float PointSize, out float3 Position, out float2 ColourUv)
+void Vertex_uv_TriangleIndex_To_CloudUvs_float(Texture2D<float4> Positions, SamplerState PositionsSampler, float2 PositionsTextureSize, float2 VertexUv, float2 PointMapUv, float PointSize, out float3 Position, out float2 ColourUv)
 {
-	Position = uv_TriangleIndex;
-	ColourUv = uv_TriangleIndex.xy;
+	Vertex_uv_TriangleIndex_To_CloudUvs(Positions, PositionsSampler, PositionsTextureSize, VertexUv, PointMapUv, PointSize, Position, ColourUv);
+	//Position = float3(PointMapUv, 0) + float3(VertexUv,0);
+	//ColourUv = PointMapUv;
 	//Vertex_uv_TriangleIndex_To_CloudUvs(Positions, PositionsSampler, uv_TriangleIndex, PointSize, Position, ColourUv);
 }

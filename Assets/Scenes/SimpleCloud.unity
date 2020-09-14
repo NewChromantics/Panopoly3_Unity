@@ -152,8 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc377c530b754496e9364027a4d9ef74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mesh: {fileID: 4300000, guid: 7998d76a1bc3047478531fb6072314e1, type: 2}
-  PointCountThousand: 400
+  mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
+  PointCountWidth: 640
+  PointCountHeight: 480
 --- !u!23 &640733026
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -200,7 +201,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640733024}
-  m_Mesh: {fileID: 4300000, guid: 7998d76a1bc3047478531fb6072314e1, type: 2}
+  m_Mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
 --- !u!4 &640733028
 Transform:
   m_ObjectHideFlags: 0
@@ -1537,8 +1538,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc377c530b754496e9364027a4d9ef74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mesh: {fileID: 4300000, guid: 7998d76a1bc3047478531fb6072314e1, type: 2}
-  PointCountThousand: 400
+  mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
+  PointCountWidth: 640
+  PointCountHeight: 480
 --- !u!23 &2103222608
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1585,7 +1587,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2103222606}
-  m_Mesh: {fileID: 4300000, guid: 7998d76a1bc3047478531fb6072314e1, type: 2}
+  m_Mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
 --- !u!4 &2103222610
 Transform:
   m_ObjectHideFlags: 0
