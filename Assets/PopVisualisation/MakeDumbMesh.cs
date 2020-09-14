@@ -63,7 +63,7 @@ public class MakeDumbMesh : MonoBehaviour
 		//	these are point-uv's but would need adjusting in the shader to be less blocky, 
 		//	but that would depend on point size so we dont do it here
 		var u = x / (float)Width;
-		var v = y / (float)Width;
+		var v = y / (float)Height;
 		var uv0 = new Vector3(u, v, 0);
 		var uv1 = new Vector3(u, v, 1);
 		var uv2 = new Vector3(u, v, 2);
