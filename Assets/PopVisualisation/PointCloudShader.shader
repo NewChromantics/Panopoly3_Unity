@@ -61,19 +61,19 @@
 				//	position in camera space
 				float3 CameraPosition;
 				float2 ColourUv;
-				bool Valid = true;
+				float Validf = 1;
 				float2 VertexUv = v.TriangleUv_PointIndex.xy;
 				float2 PointMapUv = v.PointMapUv_VertexIndex.xy;
-				float2 CloudPositionsTextureSize = CloudPositions_texelSize.zw;
-				Vertex_uv_TriangleIndex_To_CloudUvs(CloudPositions, sampler_CloudPositions, CloudPositionsTextureSize, VertexUv, PointMapUv, PointSize, CameraPosition, ColourUv);
+				Vertex_uv_TriangleIndex_To_CloudUvs(CloudPositions, sampler_CloudPositions, VertexUv, PointMapUv, PointSize, CameraPosition, ColourUv, Validf);
 				//float3 CameraPosition = GetTrianglePosition(TriangleIndex, ColourUv, Valid);
+				bool Valid = Validf > 0.5;
 
 				//	gr: here, do billboarding, and repalce below with UnityWorldToClipPos
 				v2f o;
 				o.vertex = UnityObjectToClipPos(CameraPosition);
                 o.uv = ColourUv;
 				o.OverrideColour = float4(0, 0, 0, 0);
-				/*
+				
 				if (!Valid && DEBUG_INVALIDPOSITIONS)
 				{
 					o.OverrideColour = float4(0, 1, 0, 1);
@@ -82,7 +82,7 @@
 				{
 					o.vertex = float4(0, 0, 0, 0);
 				}
-				*/
+				
                 return o;
             }
 
