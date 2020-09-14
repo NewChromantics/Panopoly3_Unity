@@ -23,6 +23,11 @@ void Vertex_uv_TriangleIndex_To_CloudUvs_float(Texture2D<float4> Positions,Sampl
 	float u = PointMapUv.x;
 	float v = PointMapUv.y;
 	ColourUv = float2(u, 1.0 - v);	
+	
+	//	uv needs to be varying across the point PointSize
+	//	so, PointSize*Texelsize
+	float2 ColourTexelSize = float2(1.0,1.0) / float2(640.0, 480.0);
+	//ColourUv += VertexUv * float2(PointSize, PointSize)*ColourTexelSize;
 
 	float4 PositionUv = float4(u, v, 0, 0);
 	//float4 PositionSample = tex2Dlod(Positions, PositionUv);
