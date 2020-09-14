@@ -27,7 +27,8 @@
 
             struct appdata
             {
-                float3 uv_TriangleIndex : POSITION;
+				float3 TriangleUv_PointIndex : POSITION;
+				float3 PointMapUv_VertexIndex : TEXCOORD0;
             };
 
             struct v2f
@@ -57,13 +58,14 @@
 
             v2f vert (appdata v)
             {
-				float TriangleIndex = v.uv_TriangleIndex.z;
-				
 				//	position in camera space
 				float3 CameraPosition;
 				float2 ColourUv;
 				bool Valid = true;
-				Vertex_uv_TriangleIndex_To_CloudUvs(CloudPositions, sampler_CloudPositions, v.uv_TriangleIndex, PointSize, CameraPosition, ColourUv);
+				float2 VertexUv = v.TriangleUv_PointIndex.xy;
+				float2 PointMapUv = v.PointMapUv_VertexIndex.xy;
+				float2 CloudPositionsTextureSize = CloudPositions_texelSize.zw;
+				Vertex_uv_TriangleIndex_To_CloudUvs(CloudPositions, sampler_CloudPositions, CloudPositionsTextureSize, VertexUv, PointMapUv, PointSize, CameraPosition, ColourUv);
 				//float3 CameraPosition = GetTrianglePosition(TriangleIndex, ColourUv, Valid);
 
 				//	gr: here, do billboarding, and repalce below with UnityWorldToClipPos
