@@ -467,14 +467,25 @@ MonoBehaviour:
   VerboseDebug: 0
   TimeSecs: 0
   DecodeAheadMs: 100
+  DecoderParams:
+    Decoder: 
+  OnStreamData:
+    m_PersistentCalls:
+      m_Calls: []
   TextureUniformNames:
   - LumaPlane
   - Plane2
   - Plane3
-  ColourBlitTarget: {fileID: 8400000, guid: bde4457f993da3a4ba818405c0fd25c2, type: 2}
+  ColourBlitTarget: {fileID: 8400000, guid: 3d6d7b734f5f38542b814de236d222c5, type: 2}
   ColourBlitMaterial: {fileID: 2100000, guid: fbf6afad7d00841ef825ab922e83f06a, type: 2}
-  DepthBlitTarget: {fileID: 8400000, guid: 27bd9eca81828e447acfe6d0711128ef, type: 2}
+  DepthBlitTarget: {fileID: 8400000, guid: a4de806843a704967a7983baf5d19c32, type: 2}
   DepthBlitMaterial: {fileID: 2100000, guid: 3bd230d12064a3c42a31b559526dc11b, type: 2}
+  OnColourUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDepthUpdated:
+    m_PersistentCalls:
+      m_Calls: []
   BlitEveryFrame: 1
 --- !u!23 &775903228
 MeshRenderer:
@@ -786,7 +797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4fb9b306cd3d5b45a93e7813e95371d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Filename: Capture.PopCap
+  Filename: cjen.PopCap
   OnFileChunkRead:
     m_PersistentCalls:
       m_Calls:
