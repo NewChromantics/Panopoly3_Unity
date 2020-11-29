@@ -1,9 +1,6 @@
 [submodule "Assets/PopUnity"]
 	path = Assets/PopUnity
 	url = https://github.com/NewChromantics/PopUnity.git
-[submodule "Assets/PopUnityWebsocket"]
-	path = Assets/PopUnityWebsocket
-	url = https://github.com/NewChromantics/PopUnityWebsocket.git
 [submodule "Assets/PanopolyForUnity"]
 	path = Assets/PanopolyForUnity
 	url = https://github.com/NewChromantics/PanopolyForUnity.git
