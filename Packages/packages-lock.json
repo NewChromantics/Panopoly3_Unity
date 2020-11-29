@@ -1,5 +1,19 @@
 {
   "dependencies": {
+    "com.newchromantics.poph264": {
+      "version": "1.3.12",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://npm.pkg.github.com/@newchromantics"
+    },
+    "com.newchromantics.popunitysockets": {
+      "version": "https://github.com/NewChromantics/PopUnitySockets.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "bc91b8c3d7ab9c7eeb5ab2f2075dab43c6202092"
+    },
     "com.unity.burst": {
       "version": "1.3.0-preview.12",
       "depth": 1,
