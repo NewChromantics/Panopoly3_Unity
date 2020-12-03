@@ -741,7 +741,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VerboseDebug: 1
   TimeSecs: 0
-  DecodeAheadMs: 1000
+  TimeOffsetFromFirstFrame: 1
+  AutoTrackTime: 1
+  DecodeAheadMs: 400
   DecoderParams:
     Decoder: 
   OnStreamData:
@@ -1607,7 +1609,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  ReadMbSec: 2
+  ReadMbSec: 23
 --- !u!114 &2036038578
 MonoBehaviour:
   m_ObjectHideFlags: 0
