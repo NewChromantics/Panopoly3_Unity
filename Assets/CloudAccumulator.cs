@@ -13,7 +13,7 @@ public class CloudAccumulator : MonoBehaviour
 
     class BlockMapMeta_t
     {
-        float BlockSize = 0.01f;      //  NxNxN world units
+        float BlockSize = 1.0f;      //  NxNxN world units
         int PointsPerBlock = 100;  //  x4 for vector4, use last value for counter
         public readonly Vector3 WorldMin = new Vector3(-1, -1, 0);
         public readonly Vector3 WorldMax = new Vector3(1, 1, 2);
