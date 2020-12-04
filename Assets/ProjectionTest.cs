@@ -5,9 +5,7 @@ using UnityEngine;
 public class ProjectionTest : MonoBehaviour
 {
     public Camera VisualisationDepthCamera;
-    public bool InvertZ = true;
-    public bool InvertZAfter = true;
-    public bool ApplyRotation = true;
+    public bool ApplyTransform = true;
     PopCap.TCamera LastCamera;
 
     public void OnFrame(PopCap.TFrameMeta ColorMeta,Texture ColourText, PopCap.TFrameMeta DepthMeta,Texture DepthTexture)
@@ -27,14 +25,13 @@ public class ProjectionTest : MonoBehaviour
 
     void UpdateCamera(PopCap.TCamera Camera)
     {
-        var LocalToWorld = Camera.GetLocalToWorld();
+        if (ApplyTransform)
+        {
+            var LocalToWorld = Camera.GetLocalToWorld();
 
-        //  https://github.com/sacchy/Unity-Arkit/blob/master/Assets/Plugins/iOS/UnityARKit/Utility/UnityARMatrixOps.cs
-        VisualisationDepthCamera.transform.localPosition = Camera.GetPosition();
-        VisualisationDepthCamera.transform.localRotation = Camera.GetRotation();
-      
-
-
+            VisualisationDepthCamera.transform.localPosition = LocalToWorld.MultiplyPoint(Vector3.zero);
+            VisualisationDepthCamera.transform.localRotation = LocalToWorld.rotation;
+        }
     }
 
 

@@ -739,7 +739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b7a287632cd5048b5a851ed718f45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VerboseDebug: 1
+  VerboseDebug: 0
   TimeSecs: 0
   TimeOffsetFromFirstFrame: 1
   AutoTrackTime: 1
@@ -993,11 +993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VisualisationDepthCamera: {fileID: 656715727}
-  InvertZ: 1
-  InvertZAfter: 1
-  InvertLocalToWorld: 0
-  Transpose: 1
-  ApplyRotation: 1
+  ApplyTransform: 0
 --- !u!4 &817575265
 Transform:
   m_ObjectHideFlags: 0
