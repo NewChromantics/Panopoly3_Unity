@@ -6,6 +6,8 @@
 		CloudColours("CloudColours", 2D) = "white" {}
 
         PointCloudMapLastPositions("PointCloudMapLastPositions", 2D) = "black" {}
+        PointCloudMapLastColours("PointCloudMapLastColours", 2D) = "black" {}
+        [Toggle]WriteColourOutputInsteadOfPosition("WriteColourOutputInsteadOfPosition",Range(0,1))=0 //  else write positions
 
         WorldBoundsMin("WorldBoundsMin",Vector) = (0,0,0)
         WorldBoundsMax("WorldBoundsMax",Vector) = (1,1,1)
@@ -56,6 +58,10 @@
             float DebugSphereRadius;
 
             sampler2D PointCloudMapLastPositions;
+            sampler2D PointCloudMapLastColours;
+
+            float WriteColourOutputInsteadOfPosition;
+#define WRITE_COLOUR    (WriteColourOutputInsteadOfPosition>0.5f)
 
             struct appdata
             {
@@ -77,7 +83,7 @@
                 return o;
             }
 
-            float4 GetOutput(int3 Mapxyz)
+            float4 GetOutput(int3 Mapxyz,float4 PreviousPosition,float4 PreviousColour)
             {
                 //  gr: -1 so last entry is normalised to 1.0
                 float3 uvw = Mapxyz.xyz / float3(BLOCKWIDTH-1,BLOCKHEIGHT-1,BLOCKDEPTH-1);
@@ -91,14 +97,45 @@
 
                 if ( DEBUG_BLIT_POSITION )
                 {
-                    return float4(xyz,1);
+                    return WRITE_COLOUR ? float4(uvw,1) : float4(xyz,1);
 				}
 
-                float3 CloudColour;
-                float4 NearCloudPosition = GetCameraNearestCloudPosition(xyz,CloudColour);
-				return NearCloudPosition;
+                float3 CloudColour = float3(1,0,1);
+                float4 CloudPosition = GetCameraNearestCloudPosition(xyz,CloudColour);
 
-                return float4(1,1,1,1);
+                CloudColour = CloudPosition.xyz;
+                CloudColour = xyz;
+
+                //  gr: not sure this matters, but use prev pos if both are valid. Shortest distance wins
+    #define INVALID_OLD_DIST    999
+    #define INVALID_NEW_DIST    998
+
+                bool OldValid = PreviousPosition.w > 0.5f;
+                bool NewValid = CloudPosition.w > 0.5f;
+
+                if ( !OldValid && NewValid )
+                {
+                    CloudColour = float3(0,1,0);
+                    //return WRITE_COLOUR ? float4(CloudColour,1) : CloudPosition;
+				}
+
+                //  both invalid, make sure we output an invalid value
+                if ( !OldValid && !NewValid )
+                {
+                    //  gr: some how, this is getting output, position is changing, in colour pass, but not in position pass?
+                    return WRITE_COLOUR ? float4(1,1,1,0) : float4(0,0,0,0);
+				}
+
+                
+
+                //  merge with old value
+                float OldDist = OldValid ? distance(xyz,PreviousPosition.xyz) : INVALID_OLD_DIST;
+                float NewDist = NewValid ? distance(xyz,CloudPosition.xyz) : INVALID_NEW_DIST;
+                CloudPosition = (NewDist < OldDist) ? CloudPosition : PreviousPosition;
+                //CloudColour = (NewDist < OldDist) ? CloudColour : PreviousColour.xyz;
+                CloudColour = (NewDist < OldDist) ? float3(0,1,1) : float3(0,0,0);
+                
+				return WRITE_COLOUR ? float4(CloudColour,CloudPosition.w) : CloudPosition;
             }
 
             float4 frag (v2f i) : SV_Target
@@ -109,10 +146,11 @@
                 int y = Row % BLOCKHEIGHT;
                 int z = Row / BLOCKHEIGHT;
 
-                float4 OldOutput = tex2D( PointCloudMapLastPositions, i.uv );
-                float4 NewOutput = GetOutput( int3(x,y,z));
-                float4 Output = lerp(OldOutput,NewOutput, NewOutput.w);
-                return Output;
+                float4 OldPosition = tex2D( PointCloudMapLastPositions, i.uv );
+                float4 OldColour = tex2D( PointCloudMapLastColours, i.uv );
+                float4 NewOutput = GetOutput( int3(x,y,z), OldPosition, OldColour );
+                
+                return NewOutput;
             }
             ENDCG
         }

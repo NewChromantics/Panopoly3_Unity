@@ -5,7 +5,9 @@ using UnityEngine;
 public class PointCloudAccumulatorBlitter : MonoBehaviour
 {
 	public RenderTexture OutputPositions;
+	public RenderTexture OutputColours;
 	RenderTexture OutputPositionsLast;
+	RenderTexture OutputColoursLast;
 	public Material AccumulatorMaterial;
 
 	void OnEnable()
@@ -24,6 +26,10 @@ public class PointCloudAccumulatorBlitter : MonoBehaviour
 		OutputPositionsLast = new RenderTexture(OutputPositions);
 		Graphics.Blit(Texture2D.blackTexture, OutputPositionsLast);
 
+		Graphics.Blit(Texture2D.blackTexture, OutputColours);
+		OutputColoursLast = new RenderTexture(OutputColours);
+		Graphics.Blit(Texture2D.blackTexture, OutputColoursLast);
+
 
 		var BoundsBox = GetComponent<BoxCollider>();
 		if (BoundsBox != null)
@@ -39,8 +45,19 @@ public class PointCloudAccumulatorBlitter : MonoBehaviour
 
 	void Update()
 	{
-		Graphics.Blit( OutputPositions, OutputPositionsLast);
+		Graphics.Blit(OutputPositions, OutputPositionsLast);
+		Graphics.Blit(OutputColours, OutputColoursLast);
+
+		//	gr: instead of MRT, do two passes. One updates colours and emulates new vs old change
+		//		2nd does the same but then writes positions
 		AccumulatorMaterial.SetTexture("PointCloudMapLastPositions", OutputPositionsLast);
-		Graphics.Blit(OutputPositionsLast, OutputPositions, AccumulatorMaterial);
+		AccumulatorMaterial.SetTexture("PointCloudMapLastColours", OutputColoursLast);
+		AccumulatorMaterial.SetFloat("WriteColourOutputInsteadOfPosition", 1.0f);
+		Graphics.Blit(null, OutputColours, AccumulatorMaterial);
+
+		AccumulatorMaterial.SetTexture("PointCloudMapLastPositions", OutputPositionsLast);
+		AccumulatorMaterial.SetTexture("PointCloudMapLastColours", OutputColoursLast);
+		AccumulatorMaterial.SetFloat("WriteColourOutputInsteadOfPosition", 0.0f);
+		Graphics.Blit(null, OutputPositions, AccumulatorMaterial);
 	}
 }

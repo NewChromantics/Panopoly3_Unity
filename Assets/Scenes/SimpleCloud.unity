@@ -157,6 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OutputPositions: {fileID: 8400000, guid: 28e10d6d4698643e68a127b318d88eaa, type: 2}
+  OutputColours: {fileID: 8400000, guid: 8fadd0bf4daf7457abf922a92c806198, type: 2}
   AccumulatorMaterial: {fileID: 2100000, guid: 132897adb167b489b8b17eba8791f562, type: 2}
 --- !u!114 &236110192
 MonoBehaviour:
@@ -182,8 +183,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4, y: 4, z: 4}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.61, y: 0.27, z: 0.43}
+  m_Center: {x: -0.07, y: -0.39, z: 0.46}
 --- !u!114 &236110194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,9 +210,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc377c530b754496e9364027a4d9ef74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
-  PointCountWidth: 640
-  PointCountHeight: 480
+  mesh: {fileID: 4300000, guid: ce8b6891a67dd465d9d3383c90e308ba, type: 2}
+  PointCountWidth: 512
+  PointCountHeight: 1024
   BoundingBox: {fileID: 0}
 --- !u!23 &236110196
 MeshRenderer:
@@ -259,7 +260,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 236110190}
-  m_Mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
+  m_Mesh: {fileID: 4300000, guid: ce8b6891a67dd465d9d3383c90e308ba, type: 2}
 --- !u!4 &236110198
 Transform:
   m_ObjectHideFlags: 0
@@ -268,7 +269,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 236110190}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.709, y: -0.005, z: 0.086}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -387,7 +388,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &640733025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,7 +460,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640733024}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.796, y: -0.005, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 656715728}
@@ -907,8 +908,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4, y: 4, z: 4}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.61, y: 0.27, z: 0.43}
+  m_Center: {x: -0.07, y: -0.39, z: 0.46}
 --- !u!114 &731210302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -993,7 +994,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 731210300}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.709, y: -0.005, z: 0.086}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1120,6 +1121,17 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 731210307}
+        m_MethodName: OnFrame
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 236110192}
         m_MethodName: OnFrame
         m_Mode: 0
         m_Arguments:
