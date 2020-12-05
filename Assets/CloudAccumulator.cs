@@ -131,6 +131,8 @@ public class CloudAccumulator : MonoBehaviour
 
     public void OnPositionTexture(RenderTexture PositionTexture)
 	{
+        if (!this.isActiveAndEnabled)
+            return;
         if (LastPositionTexture == null)
         {
             LastPositionTexture = new Texture2D(PositionTexture.width, PositionTexture.height, TextureFormat.RGBAFloat, false);
