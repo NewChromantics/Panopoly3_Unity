@@ -234,7 +234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &640733025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -748,7 +748,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 775903225}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.17, y: 0, z: 0}
+  m_LocalPosition: {x: -1.531, y: -1.2, z: 0.626}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 342827892}
@@ -772,7 +772,7 @@ MonoBehaviour:
   TimeSecs: 0
   TimeOffsetFromFirstFrame: 1
   AutoTrackTime: 1
-  DecodeAheadMs: 1000
+  DecodeAheadMs: 300
   DecoderParams:
     Decoder: 
   OnStreamData:
@@ -1906,7 +1906,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  ReadMbSec: 6
+  ReadMbSec: 8
 --- !u!114 &2036038578
 MonoBehaviour:
   m_ObjectHideFlags: 0
