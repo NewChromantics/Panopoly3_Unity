@@ -27,6 +27,10 @@ Material:
         m_Texture: {fileID: 8400000, guid: a4de806843a704967a7983baf5d19c32, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - PointCloudMapLastPositions:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - BlockDepth: 60
     - DebugBlitPosition: 0
@@ -34,5 +38,5 @@ Material:
     - DebugSphereRadius: 0.152
     m_Colors:
     - DebugSpherePosition: {r: -0.06, g: -0.45, b: 0.37, a: 1}
-    - WorldBoundsMax: {r: 0.5, g: -0.28, b: 0.71, a: 1}
-    - WorldBoundsMin: {r: -0.66, g: -0.49, b: 0.01, a: 1}
+    - WorldBoundsMax: {r: 0.5819999, g: 1.9899999, b: 2.172, a: 0}
+    - WorldBoundsMin: {r: -3.4180002, g: -2.0100002, b: -1.8280001, a: 0}

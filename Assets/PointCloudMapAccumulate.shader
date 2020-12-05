@@ -5,6 +5,7 @@
         CloudPositions("CloudPositions", 2D) = "white" {}
 		CloudColours("CloudColours", 2D) = "white" {}
 
+        PointCloudMapLastPositions("PointCloudMapLastPositions", 2D) = "black" {}
 
         WorldBoundsMin("WorldBoundsMin",Vector) = (0,0,0)
         WorldBoundsMax("WorldBoundsMax",Vector) = (1,1,1)
@@ -53,6 +54,8 @@
             #define DebugSphere float4(DebugSpherePosition,DebugSphereRadius)
             float3 DebugSpherePosition;
             float DebugSphereRadius;
+
+            sampler2D PointCloudMapLastPositions;
 
             struct appdata
             {
@@ -106,7 +109,10 @@
                 int y = Row % BLOCKHEIGHT;
                 int z = Row / BLOCKHEIGHT;
 
-                return GetOutput( int3(x,y,z));
+                float4 OldOutput = tex2D( PointCloudMapLastPositions, i.uv );
+                float4 NewOutput = GetOutput( int3(x,y,z));
+                float4 Output = lerp(OldOutput,NewOutput, NewOutput.w);
+                return Output;
             }
             ENDCG
         }
