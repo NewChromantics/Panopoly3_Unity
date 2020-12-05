@@ -28,6 +28,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+            #include "PanopolyForUnity/PointCloudRenderer/PointCloudRayMarch.cginc"
 
             //  this/map dimensions
             #define MAP_TEXTURE_WIDTH    (_ScreenParams.x)
@@ -85,10 +86,14 @@
                         return float4(0,0,0,0);
                 }
 
-                //if ( DEBUG_BLIT_POSITION )
+                if ( DEBUG_BLIT_POSITION )
                 {
                     return float4(xyz,1);
 				}
+
+                float3 CloudColour;
+                float4 NearCloudPosition = GetCameraNearestCloudPosition(xyz,CloudColour);
+				return NearCloudPosition;
 
                 return float4(1,1,1,1);
             }

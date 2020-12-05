@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: PointCloudMapAccumulate
   m_Shader: {fileID: 4800000, guid: 58cf3a97e60f14145be1bcbf7c14a5ca, type: 3}
-  m_ShaderKeywords: DEBUGSPHEREFILTER_ON
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -30,7 +30,7 @@ Material:
     m_Floats:
     - BlockDepth: 60
     - DebugBlitPosition: 0
-    - DebugSphereFilter: 1
+    - DebugSphereFilter: 0
     - DebugSphereRadius: 0.152
     m_Colors:
     - DebugSpherePosition: {r: -0.06, g: -0.45, b: 0.37, a: 1}
