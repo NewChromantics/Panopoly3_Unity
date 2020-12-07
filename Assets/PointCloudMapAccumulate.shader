@@ -34,21 +34,23 @@
             #include "UnityCG.cginc"
             #include "PanopolyForUnity/PointCloudRenderer/PointCloudRayMarch.cginc"
 
+            sampler2D PointCloudMapLastPositions;
+            float4 PointCloudMapLastPositions_TexelSize;    //  should be same as target
+            sampler2D PointCloudMapLastColours;
+
             //  this/map dimensions
-            #define MAP_TEXTURE_WIDTH    (_ScreenParams.x)
-            #define MAP_TEXTURE_HEIGHT   (_ScreenParams.y)
+            //  gr: _ScreenParams wasn't giving a good y... zero maybe
+            #define MAP_TEXTURE_WIDTH    (PointCloudMapLastPositions_TexelSize.z)
+            #define MAP_TEXTURE_HEIGHT   (PointCloudMapLastPositions_TexelSize.w)
 
             //  to aid visualisation width is bounds width x=x in space
             //  then Y is vertical
             //  in blocks of z
             float BlockDepth;
-           // #define BLOCKWIDTH  MAP_TEXTURE_WIDTH
-            //#define BLOCKDEPTH  (BlockDepth)
-            //#define BLOCKHEIGHT (MAP_TEXTURE_HEIGHT / BLOCKDEPTH)
-
-            #define BLOCKWIDTH  256
-            #define BLOCKDEPTH  80
-            #define BLOCKHEIGHT 80
+            //  gr: make sure these are integers!
+            #define BLOCKWIDTH  (MAP_TEXTURE_WIDTH)
+            #define BLOCKDEPTH  (int(BlockDepth))
+            #define BLOCKHEIGHT (int(MAP_TEXTURE_HEIGHT / float(BLOCKDEPTH)))
 
             float3 WorldBoundsMin;
             float3 WorldBoundsMax;
@@ -65,8 +67,6 @@
             float3 DebugSpherePosition;
             float DebugSphereRadius;
 
-            sampler2D PointCloudMapLastPositions;
-            sampler2D PointCloudMapLastColours;
 
             float WriteColourOutputInsteadOfPosition;
 #define WRITE_COLOUR    (WriteColourOutputInsteadOfPosition>0.5f)
