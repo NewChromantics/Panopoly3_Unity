@@ -42,9 +42,13 @@
             //  then Y is vertical
             //  in blocks of z
             float BlockDepth;
-            #define BLOCKWIDTH  MAP_TEXTURE_WIDTH
-            #define BLOCKDEPTH  (BlockDepth)
-            #define BLOCKHEIGHT (MAP_TEXTURE_HEIGHT / BLOCKDEPTH)
+           // #define BLOCKWIDTH  MAP_TEXTURE_WIDTH
+            //#define BLOCKDEPTH  (BlockDepth)
+            //#define BLOCKHEIGHT (MAP_TEXTURE_HEIGHT / BLOCKDEPTH)
+
+            #define BLOCKWIDTH  256
+            #define BLOCKDEPTH  80
+            #define BLOCKHEIGHT 80
 
             float3 WorldBoundsMin;
             float3 WorldBoundsMax;
@@ -141,13 +145,16 @@
 
                 //  merge with old value
                 //  gr: should use w now
-                float OldDist = OldValid ? distance(xyz,PreviousPosition.xyz) : INVALID_OLD_DIST;
-                float NewDist = NewValid ? distance(xyz,CloudPosition.xyz) : INVALID_NEW_DIST;
+                //float OldDist = OldValid ? distance(xyz,PreviousPosition.xyz) : INVALID_OLD_DIST;
+                //float NewDist = NewValid ? distance(xyz,CloudPosition.xyz) : INVALID_NEW_DIST;
+                float OldDist = OldValid ? PreviousPosition.w : INVALID_OLD_DIST;
+                float NewDist = NewValid ? CloudPosition.w : INVALID_NEW_DIST;
 
                 bool UseNew = (NewDist < OldDist) && NewValid;
                 CloudPosition = UseNew ? CloudPosition : PreviousPosition;
                 CloudColour = UseNew ? CloudColour : PreviousColour.xyz;
 
+CloudPosition.xyz = xyz;
                 {
                     float OutDistance = distance(xyz,CloudPosition.xyz);
 /*
