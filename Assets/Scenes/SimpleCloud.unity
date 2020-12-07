@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 236110195}
   - component: {fileID: 236110194}
   - component: {fileID: 236110193}
-  - component: {fileID: 236110192}
   - component: {fileID: 236110191}
   m_Layer: 0
   m_Name: Cloud map
@@ -159,19 +158,6 @@ MonoBehaviour:
   OutputPositions: {fileID: 8400000, guid: 28e10d6d4698643e68a127b318d88eaa, type: 2}
   OutputColours: {fileID: 8400000, guid: 8fadd0bf4daf7457abf922a92c806198, type: 2}
   AccumulatorMaterial: {fileID: 2100000, guid: 132897adb167b489b8b17eba8791f562, type: 2}
---- !u!114 &236110192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 236110190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18a6a6150bc8345f6b3ea9edc1f56b77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RayMarchMaterial: {fileID: 2100000, guid: 132897adb167b489b8b17eba8791f562, type: 2}
 --- !u!65 &236110193
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1131,7 +1117,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 236110192}
+      - m_Target: {fileID: 236110191}
         m_MethodName: OnFrame
         m_Mode: 0
         m_Arguments:
