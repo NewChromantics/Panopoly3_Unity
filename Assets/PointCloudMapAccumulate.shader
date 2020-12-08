@@ -12,7 +12,7 @@
         WorldBoundsMin("WorldBoundsMin",Vector) = (0,0,0)
         WorldBoundsMax("WorldBoundsMax",Vector) = (1,1,1)
         //[Header("BlockWidth=TextureWidth, BlockHeight=TextureHeight/Depth")]
-        [IntRange]BlockDepth("BlockDepth",Range(1,100) ) = 2
+        //[IntRange]BlockDepth("BlockDepth",Range(1,100) ) = 2
 
         [Toggle]BlitInitialise("BlitInitialise",Range(0,1)) =0
         [Toggle]DebugBlitPosition("DebugBlitPosition",Range(0,1)) =0
@@ -46,10 +46,11 @@
             //  to aid visualisation width is bounds width x=x in space
             //  then Y is vertical
             //  in blocks of z
-            float BlockDepth;
+            
             //  gr: make sure these are integers!
-            #define BLOCKWIDTH  (MAP_TEXTURE_WIDTH)
-            #define BLOCKDEPTH  (int(BlockDepth))
+            #define CALC_BLOCKDEPTH int( floor( sqrt(MAP_TEXTURE_HEIGHT) ) )
+            #define BLOCKWIDTH  90//(MAP_TEXTURE_WIDTH)
+            #define BLOCKDEPTH  90//(g_BlockDepth) //  gr: ditch the extra param and calculate it as sqrt instead
             #define BLOCKHEIGHT (int(MAP_TEXTURE_HEIGHT / float(BLOCKDEPTH)))
 
             float3 WorldBoundsMin;
@@ -84,6 +85,7 @@
             {
                 float2 uv : TEXCOORD0;
                 float4 ClipPosition : SV_POSITION;
+                int BlockDepth : TEXCOORD1;
             };
 
             v2f vert (appdata v)
@@ -91,6 +93,7 @@
                 v2f o;
                 o.ClipPosition = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
+                o.BlockDepth = CALC_BLOCKDEPTH;
                 return o;
             }
 
@@ -102,7 +105,7 @@
                 return 1-Distance;
 			}
 
-            float4 GetOutput(int3 Mapxyz,float4 PreviousPosition,float4 PreviousColour)
+            float4 GetOutput(int3 Mapxyz,float4 PreviousPosition,float4 PreviousColour,v2f Input)
             {
                 if ( BLIT_INITIALISE )
                 {
@@ -115,6 +118,7 @@
 				}
 
                 //  gr: -1 so last entry is normalised to 1.0
+                int g_BlockDepth = Input.BlockDepth;
                 float3 uvw = Mapxyz.xyz / float3(BLOCKWIDTH-1,BLOCKHEIGHT-1,BLOCKDEPTH-1);
                 float3 xyz = lerp( WorldBoundsMin, WorldBoundsMax, uvw );
 
@@ -179,17 +183,24 @@ CloudPosition.xyz = xyz;
 				//return WRITE_COLOUR ? float4(CloudColour,CloudPosition.w) : CloudPosition;
             }
 
-            float4 frag (v2f i) : SV_Target
+            int3 PointCloudMapUvToXyz(float2 uv,int g_BlockDepth)
             {
-                //  uv -> xyz, can we interp any of these in vertex?
-                int x = i.uv.x * BLOCKWIDTH;
-                int Row = i.uv.y * BLOCKHEIGHT * BLOCKDEPTH;
+                int x = uv.x * BLOCKWIDTH;
+                int Row = uv.y * BLOCKHEIGHT * BLOCKDEPTH;
                 int y = Row % BLOCKHEIGHT;
                 int z = Row / BLOCKHEIGHT;
+                return int3(x,y,z);
+            }
 
-                float4 OldPosition = tex2D( PointCloudMapLastPositions, i.uv );
-                float4 OldColour = tex2D( PointCloudMapLastColours, i.uv );
-                float4 NewOutput = GetOutput( int3(x,y,z), OldPosition, OldColour );
+
+            float4 frag (v2f Input) : SV_Target
+            {
+                //  uv -> xyz, can we interp any of these in vertex?
+                int3 xyz = PointCloudMapUvToXyz(Input.uv,Input.BlockDepth);
+
+                float4 OldPosition = tex2D( PointCloudMapLastPositions, Input.uv );
+                float4 OldColour = tex2D( PointCloudMapLastColours, Input.uv );
+                float4 NewOutput = GetOutput( xyz, OldPosition, OldColour, Input );
                 
                 return NewOutput;
             }

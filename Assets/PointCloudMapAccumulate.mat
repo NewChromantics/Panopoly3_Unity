@@ -37,12 +37,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - BlitInitialise: 0
-    - BlockDepth: 39
+    - BlockDepth: 80
     - DebugBlitPosition: 0
     - DebugSphereFilter: 0
     - DebugSphereRadius: 0.152
     - WriteColourOutputInsteadOfPosition: 0
     m_Colors:
     - DebugSpherePosition: {r: -0.06, g: -0.45, b: 0.37, a: 1}
-    - WorldBoundsMax: {r: 0.305, g: -0.245, b: 0.675, a: 0}
-    - WorldBoundsMin: {r: -0.305, g: -0.515, b: 0.245, a: 0}
+    - WorldBoundsMax: {r: 0.3199712, g: -0.2061894, b: 0.6646888, a: 0}
+    - WorldBoundsMin: {r: -0.37760067, g: -0.5, b: 0.1195125, a: 0}
