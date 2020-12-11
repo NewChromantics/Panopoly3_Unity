@@ -32,5 +32,9 @@ Material:
     - CloudPositionsAreSdf: 1
     - Debug_InvalidPositions: 0
     - DrawInvalidPositions: 0
-    - PointSize: 0.0029
-    m_Colors: []
+    - MaxSdfDistance: 0.014
+    - PointSize: 0.0016
+    - RenderSdfMinScore: 0.732
+    m_Colors:
+    - WorldBoundsMax: {r: 1, g: 1, b: 1, a: 1}
+    - WorldBoundsMin: {r: 0, g: 0, b: 0, a: 1}

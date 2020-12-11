@@ -1,4 +1,4 @@
-Shader "Panopoly/PointCloudMapAccumulate"
+﻿Shader "Panopoly/PointCloudMapAccumulate"
 {
     Properties
     {
@@ -17,6 +17,7 @@ Shader "Panopoly/PointCloudMapAccumulate"
         [Toggle]BlitInitialise("BlitInitialise",Range(0,1)) =0
         [Toggle]DebugBlitPosition("DebugBlitPosition",Range(0,1)) =0
         [Toggle]DebugSphereFilter("DebugSphereFilter",Range(0,1)) =0
+        [Toggle]DebugDrawSphere("DebugDrawSphere",Range(0,1)) =0
         DebugSpherePosition("DebugSpherePosition",Vector) = (0,0,0)
         DebugSphereRadius("DebugSphereRadius",Range(0,1)) = 1
     }
@@ -64,6 +65,8 @@ Shader "Panopoly/PointCloudMapAccumulate"
 
             float DebugSphereFilter;
             #define DEBUG_FILTER_SPHERE (DebugSphereFilter>0.5f)
+            float DebugDrawSphere;
+            #define DEBUG_DRAW_SPHERE (DebugDrawSphere>0.5f)
             #define DebugSphere float4(DebugSpherePosition,DebugSphereRadius)
             float3 DebugSpherePosition;
             float DebugSphereRadius;
@@ -126,6 +129,14 @@ Shader "Panopoly/PointCloudMapAccumulate"
                 {
                     if ( distance(xyz,DebugSphere.xyz) > DebugSphere.w )
                         return float4(0,0,0,0);
+                }
+
+                if ( DEBUG_DRAW_SPHERE )
+                {
+                    float3 Colour = normalize(DebugSphere.xyz - xyz) + float3(1,1,1) * float3(0.5,0.5,0.5);
+                    float Distance = distance(xyz,DebugSphere.xyz);
+                    Distance -= DebugSphere.w;
+                    return float4( Colour, Distance );
                 }
 
                 float3 CloudColour = float3(0,0,1);

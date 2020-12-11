@@ -44,5 +44,5 @@ Material:
     - WriteColourOutputInsteadOfPosition: 0
     m_Colors:
     - DebugSpherePosition: {r: -0.06, g: -0.45, b: 0.37, a: 1}
-    - WorldBoundsMax: {r: 0.3199712, g: -0.2061894, b: 0.6646888, a: 0}
-    - WorldBoundsMin: {r: -0.37760067, g: -0.5, b: 0.1195125, a: 0}
+    - WorldBoundsMax: {r: 0.019675225, g: -0.31059873, b: 0.6646888, a: 0}
+    - WorldBoundsMin: {r: -0.34227276, g: -0.5, b: 0.2419213, a: 0}
