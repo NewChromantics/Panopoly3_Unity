@@ -1,4 +1,4 @@
-﻿Shader "Panopoly/PointCloudMapAccumulate"
+Shader "Panopoly/PointCloudMapAccumulate"
 {
     Properties
     {
@@ -141,8 +141,8 @@
 
                
                 //  gr: not sure this matters, but use prev pos if both are valid. Shortest distance wins
-    #define INVALID_OLD_DIST    999
-    #define INVALID_NEW_DIST    998
+    #define INVALID_OLD_DIST    1
+    #define INVALID_NEW_DIST    1
 
                 bool OldValid = PreviousPosition.w > 0;
                 bool NewValid = CloudPosition.w > 0;
@@ -156,9 +156,9 @@
 
                 bool UseNew = (NewDist < OldDist) && NewValid;
                 CloudPosition = UseNew ? CloudPosition : PreviousPosition;
-                CloudColour = UseNew ? CloudColour : PreviousColour.xyz;
+                CloudColour = UseNew ? CloudColour : PreviousPosition.xyz;
 
-CloudPosition.xyz = xyz;
+CloudPosition.xyz = CloudColour;
                 {
                     float OutDistance = distance(xyz,CloudPosition.xyz);
 /*
