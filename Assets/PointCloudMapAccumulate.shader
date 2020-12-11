@@ -75,7 +75,7 @@
             float WriteColourOutputInsteadOfPosition;
 #define WRITE_COLOUR    (WriteColourOutputInsteadOfPosition>0.5f)
 
-            #define MAX_DISTANCE    99.0f
+            
 #define WRITE_DISTANCE_TO_ALPHA     true
 
             struct appdata
@@ -100,24 +100,20 @@
                 return o;
             }
 
-            float PositionToDistanceAlpha(float3 MapXyz,float3 Position)
-            {
-                float Distance = distance(MapXyz,Position);
-                Distance /= MAX_DISTANCE;
-                Distance = min( 1.0, Distance);
-                return 1-Distance;
-			}
-
             float4 GetOutput(int3 Mapxyz,float4 PreviousPosition,float4 PreviousColour,v2f Input)
             {
+                //  gr: not sure this matters, but use prev pos if both are valid. Shortest distance wins
+    #define INVALID_OLD_DIST    99
+    #define INVALID_NEW_DIST    99
+
                 if ( BLIT_INITIALISE )
                 {
                     if ( WRITE_COLOUR )
                         return float4(1,0,1,0);
                     if ( WRITE_DISTANCE_TO_ALPHA )
-                        return float4(-999,-999,-999,MAX_DISTANCE);
+                        return float4(1,0,1,INVALID_OLD_DIST);
 
-                    return float4(0,0,0,0);
+                    return float4(0,0,0,INVALID_OLD_DIST);
 				}
 
                 //  gr: -1 so last entry is normalised to 1.0
@@ -142,13 +138,16 @@
                     Distance -= DebugSphere.w;
                     if ( Distance > 0.01 )
                         Colour = float3(0,0,0);
-                    return float4( Colour, Distance );
+                    //return float4( Colour, Distance );
+                    //  overwrite previous data
+                    if ( Distance < PreviousPosition.w )
+                        PreviousPosition = float4( Colour, Distance );
                 }
 
                 float3 CloudColour = float3(0,0,1);
                 float4 CloudPosition = GetCameraNearestCloudPosition(xyz,CloudColour);
 
-                CloudPosition.w = (CloudPosition.w > 0) ? distance(xyz,CloudPosition) : 0;
+                CloudPosition.w = (CloudPosition.w > 0) ? distance(xyz,CloudPosition) : INVALID_NEW_DIST;
 
                 if ( DEBUG_BLIT_POSITION )
                 {
@@ -157,12 +156,8 @@
 				}
 
                
-                //  gr: not sure this matters, but use prev pos if both are valid. Shortest distance wins
-    #define INVALID_OLD_DIST    1
-    #define INVALID_NEW_DIST    1
-
-                bool OldValid = PreviousPosition.w > 0;
-                bool NewValid = CloudPosition.w > 0;
+                bool OldValid = PreviousPosition.w < INVALID_OLD_DIST;
+                bool NewValid = CloudPosition.w < INVALID_NEW_DIST;
 
                 //  merge with old value
                 //  gr: should use w now
