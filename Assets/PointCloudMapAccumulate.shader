@@ -50,8 +50,8 @@
             
             //  gr: make sure these are integers!
             #define CALC_BLOCKDEPTH int( floor( sqrt(MAP_TEXTURE_HEIGHT) ) )
-            #define BLOCKWIDTH  90//(MAP_TEXTURE_WIDTH)
-            #define BLOCKDEPTH  90//(g_BlockDepth) //  gr: ditch the extra param and calculate it as sqrt instead
+            #define BLOCKWIDTH  (MAP_TEXTURE_WIDTH)
+            #define BLOCKDEPTH  (g_BlockDepth) //  gr: ditch the extra param and calculate it as sqrt instead
             #define BLOCKHEIGHT (int(MAP_TEXTURE_HEIGHT / float(BLOCKDEPTH)))
 
             float3 WorldBoundsMin;
@@ -134,8 +134,14 @@
                 if ( DEBUG_DRAW_SPHERE )
                 {
                     float3 Colour = normalize(DebugSphere.xyz - xyz) + float3(1,1,1) * float3(0.5,0.5,0.5);
+                    //float Stripes = 0.1;
+                    //Colour = fmod( uvw, Stripes ) / Stripes;
+                    //float3 Colour = float3(1,1,1);
+
                     float Distance = distance(xyz,DebugSphere.xyz);
                     Distance -= DebugSphere.w;
+                    if ( Distance > 0.01 )
+                        Colour = float3(0,0,0);
                     return float4( Colour, Distance );
                 }
 
