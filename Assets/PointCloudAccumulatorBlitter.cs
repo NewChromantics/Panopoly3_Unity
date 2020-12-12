@@ -5,9 +5,7 @@ using UnityEngine;
 public class PointCloudAccumulatorBlitter : MonoBehaviour
 {
 	public RenderTexture OutputPositions;
-	public RenderTexture OutputColours;
 	RenderTexture OutputPositionsLast;
-	RenderTexture OutputColoursLast;
 	public Material AccumulatorMaterial;
 
 	void OnEnable()
@@ -26,8 +24,6 @@ public class PointCloudAccumulatorBlitter : MonoBehaviour
 		//Graphics.Blit(Texture2D.blackTexture, OutputPositions);
 		//Graphics.Blit(Texture2D.blackTexture, OutputColours);
 		AccumulatorMaterial.SetFloat("BlitInitialise", 1.0f);
-		AccumulatorMaterial.SetFloat("WriteColourOutputInsteadOfPosition", 1.0f);
-		Graphics.Blit(null, OutputColours, AccumulatorMaterial);
 		AccumulatorMaterial.SetFloat("WriteColourOutputInsteadOfPosition", 0.0f);
 		Graphics.Blit(null, OutputPositions, AccumulatorMaterial);
 
@@ -35,10 +31,6 @@ public class PointCloudAccumulatorBlitter : MonoBehaviour
 		//	make (duplicate) back buffers
 		OutputPositionsLast = new RenderTexture(OutputPositions);
 		Graphics.Blit(OutputPositions, OutputPositionsLast);
-
-		OutputColoursLast = new RenderTexture(OutputColours);
-		Graphics.Blit(OutputColours, OutputColoursLast);
-
 
 		var BoundsBox = GetComponent<BoxCollider>();
 		if (BoundsBox != null)
@@ -90,18 +82,9 @@ public class PointCloudAccumulatorBlitter : MonoBehaviour
 	void BlitNextFrame()
 	{
 		Graphics.Blit(OutputPositions, OutputPositionsLast);
-		Graphics.Blit(OutputColours, OutputColoursLast);
-		/*
-		//	gr: instead of MRT, do two passes. One updates colours and emulates new vs old change
-		//		2nd does the same but then writes positions
+
+
 		AccumulatorMaterial.SetTexture("PointCloudMapLastPositions", OutputPositionsLast);
-		AccumulatorMaterial.SetTexture("PointCloudMapLastColours", OutputColoursLast);
-		AccumulatorMaterial.SetFloat("WriteColourOutputInsteadOfPosition", 1.0f);
-		AccumulatorMaterial.SetFloat("BlitInitialise", 0.0f);
-		Graphics.Blit(null, OutputColours, AccumulatorMaterial);
-		*/
-		AccumulatorMaterial.SetTexture("PointCloudMapLastPositions", OutputPositionsLast);
-		AccumulatorMaterial.SetTexture("PointCloudMapLastColours", OutputColoursLast);
 		AccumulatorMaterial.SetFloat("WriteColourOutputInsteadOfPosition", 0.0f);
 		AccumulatorMaterial.SetFloat("BlitInitialise", 0.0f);
 		Graphics.Blit(OutputPositionsLast, OutputPositions, AccumulatorMaterial);
