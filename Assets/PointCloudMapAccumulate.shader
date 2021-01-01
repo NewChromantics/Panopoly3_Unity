@@ -33,6 +33,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+#define CLOUD_RAYMARCH_SAMPLE_RADIUS    10
             #include "PanopolyForUnity/PointCloudRenderer/PointCloudRayMarch.cginc"
 
             sampler2D PointCloudMapLastPositions;
