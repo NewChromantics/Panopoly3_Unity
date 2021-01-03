@@ -150,13 +150,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 236110190}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7115fa946b2d9443ababd8aafc2390d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   OutputPositions: {fileID: 8400000, guid: 28e10d6d4698643e68a127b318d88eaa, type: 2}
   AccumulatorMaterial: {fileID: 2100000, guid: 132897adb167b489b8b17eba8791f562, type: 2}
+  MaxPositionBlits: 1
+  FirstPositionBlit: 98105
 --- !u!65 &236110193
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2028,7 +2030,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1905228230
 MonoBehaviour:
   m_ObjectHideFlags: 0

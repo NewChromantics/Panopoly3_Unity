@@ -7,6 +7,10 @@ public class PointCloudAccumulatorBlitter : MonoBehaviour
 	public RenderTexture OutputPositions;
 	RenderTexture OutputPositionsLast;
 	public Material AccumulatorMaterial;
+	[Range(1, 1000)]
+	public int MaxPositionBlits = 1;
+	[Range(0, 640 * 480)]
+	public int FirstPositionBlit = 0;
 
 	void OnEnable()
 	{
@@ -76,17 +80,48 @@ public class PointCloudAccumulatorBlitter : MonoBehaviour
 		RayMarchMaterial.SetMatrix("LocalToCameraTransform", DepthMeta.Camera.GetLocalToCamera());
 		RayMarchMaterial.SetMatrix("WorldToLocalTransform", DepthMeta.Camera.GetWorldToLocal());
 
-		BlitNextFrame();
+		bool WritePositions = true;
+
+		if (WritePositions)
+		{
+			var PositionRT = PositionTexture as RenderTexture;
+			RenderTexture.active = PositionRT;
+			var Position2d = new Texture2D(PositionRT.width, PositionRT.height, TextureFormat.RGBAFloat, false);
+			Position2d.ReadPixels(new Rect(0, 0, Position2d.width, Position2d.height), 0, 0);
+			Position2d.Apply();
+			var PositionPixels = Position2d.GetPixels();
+			int INPUT_POSITION_COUNT = 90;
+			var Positions4 = new Color[INPUT_POSITION_COUNT];
+
+			int BlitCount = 1;
+			for (int p=FirstPositionBlit;	p< PositionPixels.Length;	p+= INPUT_POSITION_COUNT, BlitCount++)
+			{
+				System.Array.Copy(PositionPixels, p, Positions4, 0, Positions4.Length);
+				BlitNextFrame(Positions4);
+				if (BlitCount >= MaxPositionBlits )
+					break;
+			}
+			FirstPositionBlit += INPUT_POSITION_COUNT+ BlitCount;
+			if (FirstPositionBlit > PositionPixels.Length)
+				FirstPositionBlit = 0;
+		}
+		else
+		{
+			BlitNextFrame(null);
+		}
 	}
 
-	void BlitNextFrame()
+	void BlitNextFrame(Color[] InputPositions)
 	{
 		Graphics.Blit(OutputPositions, OutputPositionsLast);
 
-
 		AccumulatorMaterial.SetTexture("PointCloudMapLastPositions", OutputPositionsLast);
-		AccumulatorMaterial.SetFloat("WriteColourOutputInsteadOfPosition", 0.0f);
 		AccumulatorMaterial.SetFloat("BlitInitialise", 0.0f);
+
+		if (InputPositions != null)
+			AccumulatorMaterial.SetColorArray("InputPositions", InputPositions);
+
 		Graphics.Blit(OutputPositionsLast, OutputPositions, AccumulatorMaterial);
 	}
+
 }

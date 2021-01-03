@@ -1,4 +1,4 @@
-﻿Shader "Panopoly/PointCloudMapAccumulate"
+Shader "Panopoly/PointCloudMapAccumulate"
 {
     Properties
     {
@@ -7,7 +7,6 @@
 
         PointCloudMapLastPositions("PointCloudMapLastPositions", 2D) = "black" {}
         PointCloudMapLastColours("PointCloudMapLastColours", 2D) = "black" {}
-        [Toggle]WriteColourOutputInsteadOfPosition("WriteColourOutputInsteadOfPosition",Range(0,1))=0 //  else write positions
 
         WorldBoundsMin("WorldBoundsMin",Vector) = (0,0,0)
         WorldBoundsMax("WorldBoundsMax",Vector) = (1,1,1)
@@ -20,6 +19,9 @@
         [Toggle]DebugDrawSphere("DebugDrawSphere",Range(0,1)) =0
         DebugSpherePosition("DebugSpherePosition",Vector) = (0,0,0)
         DebugSphereRadius("DebugSphereRadius",Range(0,1)) = 1
+        [IntRange]SampleRow("SampleRow",Range(0,1024)) = 0
+
+        InputPositionsRadius("InputPositionsRadius",Range(0,0.1))=0.01
     }
     SubShader
     {
@@ -33,8 +35,14 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-#define CLOUD_RAYMARCH_SAMPLE_RADIUS    10
-            #include "PanopolyForUnity/PointCloudRenderer/PointCloudRayMarch.cginc"
+
+
+            void CloudSampleRow(float3 WorldPos,float2 RayPosUv,out float4 CloudNearestPosition,out float2 CloudNearestUv)
+            {
+                //  w=valid
+                CloudNearestPosition = float4(WorldPos,0);
+                CloudNearestUv = RayPosUv;
+            }
 
             sampler2D PointCloudMapLastPositions;
             float4 PointCloudMapLastPositions_TexelSize;    //  should be same as target
@@ -73,11 +81,14 @@
             float DebugSphereRadius;
 
 
-            float WriteColourOutputInsteadOfPosition;
-#define WRITE_COLOUR    (WriteColourOutputInsteadOfPosition>0.5f)
-
-            
 #define WRITE_DISTANCE_TO_ALPHA     true
+
+
+#define CLOUD_SAMPLE_FUNCTION   CloudSampleRow
+#define CLOUD_RAYMARCH_SAMPLE_RADIUS    10
+//            #include "PanopolyForUnity/PointCloudRenderer/PointCloudRayMarch.cginc"
+
+
 
             struct appdata
             {
@@ -90,7 +101,20 @@
                 float2 uv : TEXCOORD0;
                 float4 ClipPosition : SV_POSITION;
                 int BlockDepth : TEXCOORD1;
+                float3 xyz : TEXCOORD2;
             };
+
+
+            int3 PointCloudMapUvToXyz(float2 uv,int g_BlockDepth)
+            {
+                int x = uv.x * BLOCKWIDTH;
+                int Row = uv.y * BLOCKHEIGHT * BLOCKDEPTH;
+                int y = Row % BLOCKHEIGHT;
+                int z = Row / BLOCKHEIGHT;
+                return int3(x,y,z);
+            }
+
+
 
             v2f vert (appdata v)
             {
@@ -98,10 +122,72 @@
                 o.ClipPosition = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
                 o.BlockDepth = CALC_BLOCKDEPTH;
+
+                //  gr: -1 so last entry is normalised to 1.0
+                int3 Mapxyz = PointCloudMapUvToXyz(o.uv,o.BlockDepth);
+                int g_BlockDepth = o.BlockDepth;
+                float3 uvw = Mapxyz.xyz / float3(BLOCKWIDTH-1,BLOCKHEIGHT-1,BLOCKDEPTH-1);
+                float3 xyz = lerp( WorldBoundsMin, WorldBoundsMax, uvw );
+                o.xyz = xyz;
+
                 return o;
             }
 
-            float4 GetOutput(int3 Mapxyz,float4 PreviousPosition,float4 PreviousColour,v2f Input)
+#define BIG_DISTANCE    0.1f
+
+            #define INPUT_POSITION_COUNT  90
+            float4 InputPositions[INPUT_POSITION_COUNT];
+            float InputPositionsRadius;
+            float DistanceSquared(float3 a,float3 b)
+            {
+                float3 Delta = a-b;
+                return dot( Delta, Delta );
+	        }
+
+
+float3 NormalToRedGreen(float Normal)
+{
+	if (Normal < 0.0)
+	{
+		return float3(1, 0, 1);
+	}
+	if (Normal < 0.5)
+	{
+		Normal = Normal / 0.5;
+		return float3(1, Normal, 0);
+	}
+	else if (Normal <= 1)
+	{
+		Normal = (Normal - 0.5) / 0.5;
+		return float3(1 - Normal, 1, 0);
+	}
+
+	//	>1
+	return float3(0, 0, 1);
+}
+
+            float4 GetCameraNearestCloudPosition(float3 RayPosWorld,out float3 Colour)
+            {
+                float4 Nearest = float4(0,0,0,0);
+                float NearestDistanceSq = 999*999;
+                float3 NearestColour = float3(0,0,0);
+
+                for ( int i=0;  i<INPUT_POSITION_COUNT; i++ )
+                {
+                    float4 InputPosition = InputPositions[i];
+                    float DistanceSq = DistanceSquared(InputPosition.xyz,RayPosWorld);
+                    float Better = ( DistanceSq < NearestDistanceSq ) ? 1 : 0;
+
+                    Nearest = lerp( Nearest, InputPosition, Better );
+                    NearestDistanceSq = lerp( NearestDistanceSq, DistanceSq, Better );
+                    NearestColour = lerp( NearestColour, InputPosition.xyz, Better );
+                }
+                //Colour = NormalToRedGreen(sqrt(NearestDistanceSq)/BIG_DISTANCE);
+                Colour = NearestColour;
+                return Nearest;
+            }
+    
+            float4 GetOutput(float3 xyz,float4 PreviousPosition,v2f Input)
             {
                 //  gr: not sure this matters, but use prev pos if both are valid. Shortest distance wins
     #define INVALID_OLD_DIST    99
@@ -109,25 +195,19 @@
 
                 if ( BLIT_INITIALISE )
                 {
-                    if ( WRITE_COLOUR )
-                        return float4(1,0,1,0);
                     if ( WRITE_DISTANCE_TO_ALPHA )
                         return float4(1,0,1,INVALID_OLD_DIST);
 
                     return float4(0,0,0,INVALID_OLD_DIST);
 				}
 
-                //  gr: -1 so last entry is normalised to 1.0
-                int g_BlockDepth = Input.BlockDepth;
-                float3 uvw = Mapxyz.xyz / float3(BLOCKWIDTH-1,BLOCKHEIGHT-1,BLOCKDEPTH-1);
-                float3 xyz = lerp( WorldBoundsMin, WorldBoundsMax, uvw );
-
+/*
                 if ( DEBUG_FILTER_SPHERE )
                 {
                     if ( distance(xyz,DebugSphere.xyz) > DebugSphere.w )
                         return float4(0,0,0,0);
                 }
-
+*/
                 if ( DEBUG_DRAW_SPHERE )
                 {
                     float3 Colour = normalize(DebugSphere.xyz - xyz) + float3(1,1,1) * float3(0.5,0.5,0.5);
@@ -148,14 +228,15 @@
                 float3 CloudColour = float3(0,0,1);
                 float4 CloudPosition = GetCameraNearestCloudPosition(xyz,CloudColour);
 
-                CloudPosition.w = (CloudPosition.w > 0) ? distance(xyz,CloudPosition) : INVALID_NEW_DIST;
+                CloudPosition.w = (CloudPosition.w > 0) ? (distance(xyz,CloudPosition)-InputPositionsRadius) : INVALID_NEW_DIST;
 
+/*
                 if ( DEBUG_BLIT_POSITION )
                 {
                     CloudColour = float4(uvw,1);
                     CloudPosition = float4(xyz,1);
 				}
-
+*/
                
                 bool OldValid = PreviousPosition.w < INVALID_OLD_DIST;
                 bool NewValid = CloudPosition.w < INVALID_NEW_DIST;
@@ -171,10 +252,11 @@
                 CloudPosition = UseNew ? CloudPosition : PreviousPosition;
                 CloudColour = UseNew ? CloudColour : PreviousPosition.xyz;
 
-CloudPosition.xyz = CloudColour;
+                CloudPosition.xyz = CloudColour;
                 {
-                    float OutDistance = distance(xyz,CloudPosition.xyz);
 /*
+                    float OutDistance = distance(xyz,CloudPosition.xyz);
+
                     if ( WRITE_DISTANCE )
                         CloudPosition.xyz = float3(OutDistance,OutDistance,OutDistance);
 
@@ -193,27 +275,22 @@ CloudPosition.xyz = CloudColour;
                 }
 
                 return CloudPosition;
-				//return WRITE_COLOUR ? float4(CloudColour,CloudPosition.w) : CloudPosition;
             }
-
-            int3 PointCloudMapUvToXyz(float2 uv,int g_BlockDepth)
-            {
-                int x = uv.x * BLOCKWIDTH;
-                int Row = uv.y * BLOCKHEIGHT * BLOCKDEPTH;
-                int y = Row % BLOCKHEIGHT;
-                int z = Row / BLOCKHEIGHT;
-                return int3(x,y,z);
-            }
-
 
             float4 frag (v2f Input) : SV_Target
             {
                 //  uv -> xyz, can we interp any of these in vertex?
-                int3 xyz = PointCloudMapUvToXyz(Input.uv,Input.BlockDepth);
+                int3 Mapxyz = PointCloudMapUvToXyz(Input.uv,Input.BlockDepth);
+
+                //  gr: -1 so last entry is normalised to 1.0
+                int g_BlockDepth = Input.BlockDepth;
+                float3 uvw = Mapxyz.xyz / float3(BLOCKWIDTH-1,BLOCKHEIGHT-1,BLOCKDEPTH-1);
+                float3 xyz = lerp( WorldBoundsMin, WorldBoundsMax, uvw );
+
+                //float3 xyz = Input.xyz;
 
                 float4 OldPosition = tex2D( PointCloudMapLastPositions, Input.uv );
-                float4 OldColour = tex2D( PointCloudMapLastColours, Input.uv );
-                float4 NewOutput = GetOutput( xyz, OldPosition, OldColour, Input );
+                float4 NewOutput = GetOutput( xyz, OldPosition, Input );
                 
                 return NewOutput;
             }

@@ -42,8 +42,10 @@ Material:
     - DebugDrawSphere: 1
     - DebugSphereFilter: 0
     - DebugSphereRadius: 0.017
+    - InputPositionsRadius: 0.001
+    - SampleRow: 0
     - WriteColourOutputInsteadOfPosition: 0
     m_Colors:
-    - DebugSpherePosition: {r: -0.05, g: -0.4, b: 0.42, a: 1}
+    - DebugSpherePosition: {r: -0.03, g: -0.38, b: 0.42, a: 1}
     - WorldBoundsMax: {r: 0.5, g: -0.25, b: 0.75, a: 0}
     - WorldBoundsMin: {r: -0.5, g: -0.55, b: 0.25, a: 0}
