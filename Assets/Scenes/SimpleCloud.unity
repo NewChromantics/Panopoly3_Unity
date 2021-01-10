@@ -142,7 +142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &236110191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,6 +200,7 @@ MonoBehaviour:
   mesh: {fileID: 4300000, guid: ce8b6891a67dd465d9d3383c90e308ba, type: 2}
   PointCountWidth: 512
   PointCountHeight: 1024
+  CreateQuads: 0
   BoundingBox: {fileID: 0}
 --- !u!23 &236110196
 MeshRenderer:
@@ -389,9 +390,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc377c530b754496e9364027a4d9ef74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
+  mesh: {fileID: 4300000, guid: b626c68aa1ad64f9fb8702fd91c8cc9a, type: 2}
   PointCountWidth: 640
   PointCountHeight: 480
+  CreateQuads: 1
   BoundingBox: {fileID: 0}
 --- !u!23 &640733026
 MeshRenderer:
@@ -439,7 +441,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640733024}
-  m_Mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
+  m_Mesh: {fileID: 4300000, guid: b626c68aa1ad64f9fb8702fd91c8cc9a, type: 2}
 --- !u!4 &640733028
 Transform:
   m_ObjectHideFlags: 0
@@ -926,6 +928,7 @@ MonoBehaviour:
   mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
   PointCountWidth: 640
   PointCountHeight: 480
+  CreateQuads: 0
   BoundingBox: {fileID: 0}
 --- !u!23 &731210304
 MeshRenderer:
@@ -1049,12 +1052,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VerboseDebug: 0
+  DecodeKeyframeOnly: 0
   TimeSecs: 0
   TimeOffsetFromFirstFrame: 1
   AutoTrackTime: 1
-  DecodeAheadMs: 300
+  DecodeAheadMs: 250
   DecoderParams:
-    Decoder: Broadway
+    Decoder: 
   OnStreamData:
     m_PersistentCalls:
       m_Calls: []
@@ -1142,6 +1146,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   BlitEveryFrame: 1
+  RelayToWriter: {fileID: 0}
 --- !u!23 &775903228
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1343,7 +1348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &817575264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2259,7 +2264,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  ReadMbSec: 8
+  ReadMbSec: 7
 --- !u!114 &2036038578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2349,6 +2354,7 @@ MonoBehaviour:
   mesh: {fileID: 4300000, guid: fad6a7fa96da0484e9cf95261d504151, type: 2}
   PointCountWidth: 640
   PointCountHeight: 480
+  CreateQuads: 0
   BoundingBox: {fileID: 0}
 --- !u!23 &2103222608
 MeshRenderer:
